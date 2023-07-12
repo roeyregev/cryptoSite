@@ -1,0 +1,184 @@
+/* general */
+
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+html {
+    background: radial-gradient(66.54% 66.54% at 50.00% 12.64%, #2D4C69 0%, #343434 100%);
+}
+
+
+
+/*=============================================
+=            Nav Bar            =
+=============================================*/
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    height: 90px;
+    background: linear-gradient(180deg, #000 0%, #000 100%);
+    padding: 30px;
+    color: white;
+}
+
+nav>div>a {
+    color: white;
+    text-decoration: none;
+}
+
+#logoDiv {
+    height: 60px;
+    width: 200px;
+    background-color: rgb(96, 96, 96);
+}
+
+#navBarLinksDiv {
+    display: flex;
+    gap: 30px;
+}
+
+#searchBoxDiv {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 10px;
+    color: rgb(139, 139, 139);
+    height: 40px;
+    width: 200px;
+    box-sizing: border-box;
+    background-color: rgb(44, 44, 44);
+    border: solid 1px white;
+    border-radius: 20px;
+}
+
+.search_icon {
+    height: 15px;
+    width: 15px;
+    background-color: rgb(82, 82, 82);
+}
+
+/*=====  End of Nav Bar  ======*/
+
+
+#pageContent {
+    background-color: rgb(32, 32, 32);
+}
+
+
+/* Hero Image */
+
+#heroImageDiv {
+    height: 300px;
+    background-color: azure;
+    opacity: 0.5;
+}
+
+#HomepageTypo {
+    color: white;
+}
+
+
+/*=============================================
+=            Main Grid            =
+=============================================*/
+
+
+#currenciesContent {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    color: white;
+    gap: 0px;
+}
+
+.single_coins_card {
+    background-color: rgb(30, 30, 30);
+    border: 1px solid rgb(255, 255, 255);
+    padding: 20px;
+    min-width: 150px;
+    position: relative;
+}
+
+.icon_and_symbol {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.coin_icon {
+    height: 50px;
+    width: 50px;
+}
+
+.coin_symbol {
+    font-size: 26px;
+}
+
+.favorite_icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    height: 20px;
+    width: 20px;
+    background-color: #2D4C69;
+}
+
+.changing_content {
+    background-color: #869baf;
+}
+
+.slider_div {
+    height: 20px;
+    width: inherit;
+    background-color: #4383bf;
+}
+
+.favorite_icon {
+    cursor: pointer;
+}
+/*=====  End of Main Grid  ======*/
+
+
+
+
+/*=============================================
+=            Reports page            =
+=============================================*/
+
+.chart {
+    height: 800px;
+    background-color: rgb(93, 66, 66);
+}
+
+.favorites_list {
+    display: flex;
+    gap: 20px;
+    height: 100px;
+    background-color: rgb(125, 99, 99);
+}
+
+/*=====  End of Reports page  ======*/
+
+
+.chart {
+    height: 800px;
+    color: black;
+}
+
+
+
+
+/* Footer */
+
+footer {
+    height: 60px;
+    background-color: brown;
+}
