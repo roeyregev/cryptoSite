@@ -68,22 +68,40 @@ nav>div>a {
 /*=====  End of Nav Bar  ======*/
 
 
-#pageContent {
-    background-color: rgb(32, 32, 32);
-}
-
 
 /* Hero Image */
 
 #heroImageDiv {
-    height: 300px;
-    background-color: azure;
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    width: 100%;
+    height: 800px;
+    background: linear-gradient(180deg, #964BB0 0%, #3B3993 85.42%);
     opacity: 0.5;
 }
 
 #HomepageTypo {
     color: white;
+    padding-left: 50px;
+    padding-bottom: 20px;
+
 }
+
+h1 {
+    font-family: 'Racing Sans One', cursive;
+    font-size: 60px;
+    line-height: 110%;
+    margin-bottom: -10px;
+}
+
+#HomepageTypo>p {
+    font-size: 26px;
+    font-weight: 100;
+    line-height: 150%;
+    max-width: 800px;
+}
+
 
 
 /*=============================================
@@ -94,23 +112,41 @@ nav>div>a {
 #currenciesContent {
     display: flex;
     flex-wrap: wrap;
-    justify-content: stretch;
     color: white;
-    gap: 0px;
+   
 }
 
 .single_coins_card {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
     background-color: rgb(30, 30, 30);
     border: 1px solid rgb(255, 255, 255);
-    padding: 20px;
-    min-width: 150px;
+    padding: 24px;
     position: relative;
+    min-width: 250px;
+
 }
 
 .icon_and_symbol {
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.coin_symbol {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 120%;
+}
+
+.coin_id {
+    font-size: 18px;
+    line-height: 100%;
+    margin: 0;
+    font-weight: 100;
 }
 
 .coin_icon {
@@ -118,32 +154,72 @@ nav>div>a {
     width: 50px;
 }
 
-.coin_symbol {
-    font-size: 26px;
-}
-
 .favorite_icon {
     position: absolute;
     right: 10px;
     top: 10px;
-    height: 20px;
-    width: 20px;
-    background-color: #2D4C69;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.favorite-on {
+    opacity: 1;
+    .single_coins_card {
+        background-color: aliceblue;
+    }
+}
+
+.single_coins_card:has(.favorite-on){
+    box-shadow: 0px 0px 40px 0px rgba(223, 249, 255, 0.10) inset;
+    background: linear-gradient(136deg, #331d34 0%, #33274f 100%);
+
 }
 
 .changing_content {
-    background-color: #869baf;
+    background-color: #2e3439;
+    line-height: 150%;
+    min-width: 310px;
 }
+
+
+/* Slider */
 
 .slider_div {
-    height: 20px;
-    width: inherit;
-    background-color: #4383bf;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    align-items: center;
+    margin-top: 10px;
 }
 
-.favorite_icon {
-    cursor: pointer;
+.dot {
+    background-color: white;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
 }
+
+.icon_arrow {
+    background-color: rgb(53, 53, 53);
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+}
+
+.right {
+    background-image: url(Assets/icons/icon_arrow.svg);
+}
+
+.left {
+    background-image: url(Assets/icons/icon_arrow.svg);
+    rotate: 180deg;
+}
+
+
+
+
 /*=====  End of Main Grid  ======*/
 
 
@@ -179,6 +255,6 @@ nav>div>a {
 /* Footer */
 
 footer {
-    height: 60px;
-    background-color: brown;
+    height: 200px;
+    background-color: rgb(42, 31, 50);
 }
