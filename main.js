@@ -1,13 +1,16 @@
 "use strict";
 
-(() => {
+(async () => {
 
     //Load homepage
     let favorites = [];
+    const coinsDataArr = await getJson("coinsData.json");
+
     displayHomepage()
 
+
     //dynamic html navbar:
-    const pageContent = document.getElementById("pageContent");
+    // const pageContent = document.getElementById("pageContent");
 
     const currenciesLink = document.getElementById("currenciesLink");
     const reportLink = document.getElementById("reportLink");
@@ -25,20 +28,8 @@
         displayAboutPage()
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    displayInModal()
+    
 
     //------------------------------------------------------------------------
     //                                 FUNCTIONS
@@ -52,8 +43,8 @@
     }
 
     async function displayHomepage() {
-        const coinsDataArr = await getJson("coinsData.json");
-
+        // const coinsDataArr = await getJson("coinsData.json");
+        const pageContent = document.getElementById("pageContent");
         let html = `<div id="heroImageDiv"></div>
                     <div id="HomepageTypo">
                         <h1>Welcome to Crapto! <br>the crappy crypto page</h1>
@@ -63,6 +54,7 @@
                         active in any way?
                         If you did, then Crapto is the place for you</p>
                     </div>
+                    
                     <section id="currenciesContent">
                     `;
         for (let i = 0; i < 50; i++) {
@@ -78,7 +70,6 @@
                        
                         <div class="favorite_icon" id="${i}">${favoritesIcon}</div>
                       
-
                         <div class="extra_info_div">
                            
                             <div class="changing_content">
@@ -102,8 +93,11 @@
         pageContent.innerHTML = html;
 
         addToFavorites();
-
     };
+
+   
+
+
 
     async function displayReportsPage() {
         let html = `
@@ -130,41 +124,89 @@
         pageContent.innerHTML = html;
     }
 
+    //toggle favorites buttons
     function addToFavorites() {
         const favoriteIconsArray = document.getElementsByClassName("favorite_icon");
-        console.log(favoriteIconsArray);
-
+        // console.log(favoriteIconsArray);
         for (let i = 0; i < favoriteIconsArray.length; i++) {
             favoriteIconsArray[i].addEventListener("click", function () {
                 favoriteIconsArray[i].classList.toggle("favorite-on");
                 console.log(i);
                 updateFavoritesArray()
+                displayInModal()
             })
         }
+
     }
 
+    //updates the favorites array itself
     function updateFavoritesArray() {
         favorites = [];
         let selectedFavorites = document.getElementsByClassName("favorite-on");
         for (const item of selectedFavorites) {
             let index = item.id;
             favorites.push(index);
-            console.log(favorites);
         }
+        console.log("updated favorites array: " + favorites);
+        return favorites;
     }
 
-    function isFavoritesValid() {
-        if (favorites.length >= 5) {
-            alert("too many. remove one")
+    //take the favorites array and display it in the modal
+    function displayInModal() {
+        
+        const coinsModalListContainer = document.getElementById("coinsModalListContainer");
+
+        let html = ``;
+        for (const item of favorites) {
+            html += `
+                        <div class="modal-list-item">
+                 
+                                <div class="icon_and_symbol">
+                                    <div class = "coin_icon"><img class = "coin_icon" src="${coinsDataArr[item].image}" alt="${coinsDataArr[item].id}"> </div>
+                                    <div class="symbol_and_id">
+                                        <p class="coin_symbol"> ${coinsDataArr[item].symbol}</p>
+                                        <p class="coin_id"> ${coinsDataArr[item].id}</p>
+                                    </div>
+                                                   
+                                <div class="favorite-icon-modal favorite-on-modal" id="${item}">${favoritesIcon}</div>
+                            </div>
+                        </div>
+                        `
         }
+        coinsModalListContainer.innerHTML = html;
+        
     }
+
+    //toggle favorite icons in modal and removes the relevant item from the array
+    function toggleIconsInModal() {
+        console.log("favorites before delete: " + favorites);
+
+        const modalFavoriteIconsArray = document.getElementsByClassName("favorite-icon-modal");
+
+        for (let i = 0; i < modalFavoriteIconsArray.length; i++) {
+
+            modalFavoriteIconsArray[i].addEventListener("click", function () {
+                //toggle class and icon
+                modalFavoriteIconsArray[i].classList.toggle("favorite-on-modal");
+
+                //remove from favorites array
+                const itemToDelete = this.id;
+                favorites.splice(favorites.indexOf(itemToDelete), 1);
+                console.log("item to delete: " + itemToDelete);
+                console.log("favorites after delete: " + favorites);
+                
+            })
+           
+
+        }
+
+
+    };
+
+
+
 
 
 
 })();
-
-
-
-
-
 

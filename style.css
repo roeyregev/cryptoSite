@@ -154,7 +154,7 @@ h1 {
     width: 50px;
 }
 
-.favorite_icon {
+.favorite_icon, .favorite-icon-modal {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -164,7 +164,7 @@ h1 {
     opacity: 0.5;
 }
 
-.favorite-on {
+.favorite-on, .favorite-on-modal {
     opacity: 1;
     .single_coins_card {
         background-color: aliceblue;
@@ -222,6 +222,63 @@ h1 {
 
 /*=====  End of Main Grid  ======*/
 
+
+
+/*=============================================
+=            Modal            =
+=============================================*/
+
+.modal-container{
+    position: fixed;
+    /* z-index: 1; */
+    top: 0;
+    margin-top: 5%;
+}
+.modal-bg {
+    top: 0;
+    background-color: rgba(0, 0, 0, 1);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.modal-popup {
+    background-color: #ffffff;
+    margin:  auto;
+    /* width: 50%; */
+    padding: 20px;
+    margin: 20% auto;
+}
+
+#closeModalBtn {
+    position: absolute;
+    right: 20px;
+    top: 150px;
+    height: 24px;
+    width: 24;
+}
+
+#acceptBtn {
+    margin: 10px;
+}
+
+#coinsModalListContainer {
+  display: flex;
+  gap: 30px;
+   
+}
+
+.modal-list-item {
+    display: flex;
+    gap: 30px;
+    border: 1px solid grey;
+}
+
+.favorite-icon-modal {
+    position: relative;
+}
+
+/*=====  End of Modal  ======*/
 
 
 
