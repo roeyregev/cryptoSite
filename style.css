@@ -45,18 +45,29 @@ nav>div>a {
     gap: 30px;
 }
 
+
+/* Search box */
+
 #searchBoxDiv {
     display: flex;
     gap: 5px;
     align-items: center;
     padding: 10px;
     color: rgb(139, 139, 139);
-    height: 40px;
-    width: 200px;
+    height: 48px;
     box-sizing: border-box;
     background-color: rgb(44, 44, 44);
     border: solid 1px white;
-    border-radius: 20px;
+    border-radius: 40px;
+}
+
+#searchInput {
+    background-color: transparent;
+    box-shadow: none;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 100;
+    width: 70%;
 }
 
 .search_icon {
@@ -64,6 +75,14 @@ nav>div>a {
     width: 15px;
     background-color: rgb(82, 82, 82);
 }
+
+#clearSearch {
+    cursor: pointer;
+}
+
+
+
+
 
 /*=====  End of Nav Bar  ======*/
 
@@ -125,7 +144,10 @@ h1 {
     padding: 24px;
     position: relative;
     min-width: 250px;
+}
 
+.hide {
+    display: none;
 }
 
 .icon_and_symbol {
@@ -230,6 +252,7 @@ h1 {
 
 .modal-container{
     position: fixed;
+    display: none;
     /* z-index: 1; */
     top: 0;
     margin-top: 5%;
@@ -286,6 +309,11 @@ h1 {
 =            Reports page            =
 =============================================*/
 
+canvas {
+    height: 800px;
+    width: 100%;
+    background-color: pink;
+}
 .chart {
     height: 800px;
     background-color: rgb(93, 66, 66);
@@ -315,3 +343,5 @@ footer {
     height: 200px;
     background-color: rgb(42, 31, 50);
 }
+
+
