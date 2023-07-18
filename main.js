@@ -1,14 +1,27 @@
+// "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
+
+
 "use strict";
 
 (async () => {
 
+
+    async function getJson(url) {
+        try {
+            const response = await fetch(url);
+            const json = await response.json();
+            console.log(json);
+            return json;
+        } catch (error) {
+            console.log("Something went Wrong: " + error)
+        }
+    }
+
     //Load homepage
     let favorites = [];
-    const coinsDataArr = await getJson("coinsData.json");
-
+    const coinsData = await getJson("coinsData.json");
     displayHomepage()
 
-    //---------------------------------------------------------------------------------
     //Search
     const searchInput = document.getElementById("searchInput");
     const clearSearch = document.getElementById("clearSearch");
@@ -23,24 +36,24 @@
         console.log("Search query: " + searchQuery);
         let coinsCardsArray = document.getElementsByClassName("single_coins_card");
 
-        for (let i = 0; i < coinsDataArr.length; i++) {
+        for (let i = 0; i < coinsData.length; i++) {
             let index = i;
-            const isVisible = coinsDataArr[i].name.toLowerCase().includes(searchQuery) || coinsDataArr[i].id.toLowerCase().includes(searchQuery);
-            console.log(coinsDataArr[i].name + ": " + isVisible);
+            const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) || coinsData[i].id.toLowerCase().includes(searchQuery);
+            console.log(coinsData[i].name + ": " + isVisible);
             coinsCardsArray[index].classList.toggle("hide", !isVisible);
 
         }
     })
 
-    //---------------------------------------------------------------------------------
-
-    //dynamic html navbar:
-    // const pageContent = document.getElementById("pageContent");
-
+    //Navbar:
     const currenciesLink = document.getElementById("currenciesLink");
     const reportLink = document.getElementById("reportLink");
     const aboutLink = document.getElementById("aboutLink");
+    const logoDiv = document.getElementById("logoDiv");
 
+    logoDiv.addEventListener("click", () => {
+        displayHomepage()
+    })
     currenciesLink.addEventListener("click", () => {
         displayHomepage()
     })
@@ -60,12 +73,7 @@
     //                                 FUNCTIONS
     //------------------------------------------------------------------------
 
-    async function getJson(url) {
-        const response = await fetch(url);
-        const json = await response.json();
-        console.log(json);
-        return json;
-    }
+
 
     async function displayHomepage() {
         const pageContent = document.getElementById("pageContent");
@@ -81,61 +89,75 @@
                     
                     <section id="currenciesContent">
                     `;
-        for (let i = 0; i < 50; i++) {
-            html += `
+
+        if (coinsData && coinsData.length) {
+            for (let i = 0; i < 50; i++) {
+                html += `
                     <div class="single_coins_card" id="cardId${i}">
                         <div class="icon_and_symbol">
-                            <div class = "coin_icon"><img class = "coin_icon" src="${coinsDataArr[i].image}" alt="${coinsDataArr[i].id}"> </div>
+                            <div class = "coin_icon"><img class = "coin_icon" src="${coinsData[i].image}" alt="${coinsData[i].id}"> </div>
                             <div class="symbol_and_id">
-                                <p class="coin_symbol"> ${coinsDataArr[i].symbol}</p>
-                                <p class="coin_id"> ${coinsDataArr[i].id}</p>
+                                <p class="coin_symbol"> ${coinsData[i].symbol}</p>
+                                <p class="coin_id"> ${coinsData[i].id}</p>
                             </div>
                         </div>
                        
                         <div class="favorite_icon" id="${i}">${favoritesIcon}</div>
                       
                         <div class="extra_info_div">
-                           
-                            <div class="changing_content">
-                            <div>Market cap rank: ${coinsDataArr[i].market_cap_rank}</div>
-                                <div>Market cap: ${(coinsDataArr[i].market_cap / 1000000).toFixed(0)} M</div>
-                                <div>Circulating supply: ${(coinsDataArr[i].circulating_supply / 1000000).toFixed(0)} M</div>
+                            <div class="switch-container hide-rates">
+                                <div class="market_content">
+                                    <div>Market cap rank: ${coinsData[i].market_cap_rank}</div>
+                                    <div>Market cap: ${(coinsData[i].market_cap / 1000000).toFixed(0)} M</div>
+                                    <div>Circulating supply: ${(coinsData[i].circulating_supply / 1000000).toFixed(0)} M</div>
+                                </div>
                             </div>
 
-                            <div class="slider_div">
-                                <div class="icon_arrow left"></div>
-                                <div class="dot dot-on"></div>
-                                <div class="dot dot-off"></div>
-                                <div class="icon_arrow right"></div>
-                            </div>
+                            <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>
+                      
                         </div>
                     </div>
                     `
+            }
+        } else {
+            html += `<div>BUG!</div>`;
         }
         html += `</section>`;
-
         pageContent.innerHTML = html;
 
         // addToFavorites();
     };
 
     async function displayReportsPage() {
-
-
-        let html = `
-                  <div class="chartContainer">
-                    <canvas id="coinsChart"></canvas>
-                  </div>
-                  
-                  <div class="legend">
-                  </div>
-                 `
+        let html = `<canvas id="myChart"></canvas>`
         pageContent.innerHTML = html;
+
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['date1', 'date2', 'date3', 'date4', 'date4', 'date5', 'date6', 'date7', 'date8', 'date9', 'date10', 'date11', 'date12', 'date13', 'date14'],
+                datasets: [{
+                    label: 'Rate',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
     }
 
-    function createChart() {
-        const ctx = document.getElementById('coinsChart');
-    }
+    // function loadChart() {
+
+    // }
 
     async function displayAboutPage() {
         let html = `
@@ -233,5 +255,54 @@
 
 
 
+
+    //display more info in each card
+    const switchInfoButtons = document.getElementsByClassName("switch-info");
+
+    for (const button of switchInfoButtons) {
+        button.addEventListener("click", async function () {
+            const cardId = this.parentElement.parentElement.id;
+            this.parentElement.children[0].classList.toggle("hide-market");
+            this.parentElement.children[0].classList.toggle("hide-rates");
+
+            //fetch relevant data
+            const index = cardId.slice(6)
+            const extraInfo = await getJson(`https://api.coingecko.com/api/v3/coins/${coinsData[index].id}`);
+
+            //session storage:
+
+
+            let html = `
+                            <div class="market_content">
+                                <div>Market cap rank: ${coinsData[index].market_cap_rank}</div>
+                                <div>Market cap: ${(coinsData[index].market_cap / 1000000).toFixed(0)} M</div>
+                                <div>Circulating supply: ${(coinsData[index].circulating_supply / 1000000).toFixed(0)} M</div>
+                            </div> 
+
+                            <div class="rates_content">
+                                <div>USD: ${extraInfo.market_data.current_price.usd}</div>
+                                <div>EUR: ${extraInfo.market_data.current_price.eur}</div>
+                                <div>ILS: ${extraInfo.market_data.current_price.ils}</div>
+                            </div>
+                        `;
+
+            this.parentElement.children[0].innerHTML = html
+
+
+
+        })
+
+    }
+
 })();
 
+
+
+
+
+// <div class="slider_div">
+//     <div class="icon_arrow left"></div>
+//     <div class="dot dot-on"></div>
+//     <div class="dot dot-off"></div>
+//     <div class="icon_arrow right"></div>
+// </div>
