@@ -1,6 +1,3 @@
-// "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
-
-
 "use strict";
 
 (async () => {
@@ -17,7 +14,7 @@
     }
 
     //Load homepage
-    let favorites = [];
+
     const coinsData = await getJson("coinsData.json");
     displayHomepage()
 
@@ -151,10 +148,6 @@
 
     }
 
-    // function loadChart() {
-
-    // }
-
     async function displayAboutPage() {
         let html = `
                   <div class="about_typo"> 
@@ -164,33 +157,6 @@
                   </div>
                  `
         pageContent.innerHTML = html;
-    }
-
-    //toggle favorites buttons
-    // function addToFavorites() {
-    //     const favoriteIconsArray = document.getElementsByClassName("favorite_icon");
-    //     // console.log(favoriteIconsArray);
-    //     for (let i = 0; i < favoriteIconsArray.length; i++) {
-    //         favoriteIconsArray[i].addEventListener("click", function () {
-    //             favoriteIconsArray[i].classList.toggle("favorite-on");
-    //             console.log(i);
-    //             updateFavoritesArray()
-    //             displayInModal()
-    //         })
-    //     }
-
-    // }
-
-    //updates the favorites array itself
-    function updateFavoritesArray() {
-        favorites = [];
-        let selectedFavorites = document.getElementsByClassName("favorite-on");
-        for (const item of selectedFavorites) {
-            let index = item.id;
-            favorites.push(index);
-        }
-        console.log("updated favorites array: " + favorites);
-        return favorites;
     }
 
     //display more info in each card
@@ -215,6 +181,8 @@
                 //save
                 let extraInfoString = JSON.stringify(extraInfo);
                 localStorage.setItem(`${coinsData[index].id} info`, extraInfoString);
+
+                //remove from storage after 2 min
                 setTimeout(() => {
                     localStorage.removeItem(`${coinsData[index].id} info`);
                 }, 120 * 1000);
@@ -238,10 +206,82 @@
         })
     }
 
+
+    //Favorites
+    let favorites = [];
+
+    const favoriteButtons = document.getElementsByClassName("favorite_icon");
+    console.log(favoriteButtons);
+
+    for (const button of favoriteButtons) {
+        button.addEventListener("click", function () {
+            if (!favorites.includes(this.id)) {
+                favorites.push(this.id);
+                console.log(favorites);
+            } else {
+                const index = favorites.indexOf(this.id);
+                favorites.splice(index, 1);
+                console.log(favorites);
+            }
+            favoriteOn();
+        })
+
+    }
+
+    function favoriteOn() {
+        for (const button of favoriteButtons){
+            button.classList.remove("favorite-on")
+        }
+        for (const item of favorites) {
+            console.log("item: " + item );
+            favoriteButtons[item].classList.toggle("favorite-on")
+        }
+    }
+
+
+
+
 })();
 
 
 
+
+
+// "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
+
+   //updates the favorites array itself
+    // function updateFavoritesArray() {
+    //     favorites = [];
+    //     let selectedFavorites = document.getElementsByClassName("favorite-on");
+    //     for (const item of selectedFavorites) {
+    //         let index = item.id;
+    //         favorites.push(index);
+    //     }
+    //     console.log("updated favorites array: " + favorites);
+    //     return favorites;
+    // }
+
+
+
+    //toggle favorites buttons
+    // function addToFavorites() {
+    //     const favoriteIconsArray = document.getElementsByClassName("favorite_icon");
+    //     // console.log(favoriteIconsArray);
+    //     for (let i = 0; i < favoriteIconsArray.length; i++) {
+    //         favoriteIconsArray[i].addEventListener("click", function () {
+    //             favoriteIconsArray[i].classList.toggle("favorite-on");
+    //             console.log(i);
+    //             updateFavoritesArray()
+    //             displayInModal()
+    //         })
+    //     }
+
+    // }
+
+
+   // function loadChart() {
+
+    // }
 
 
 // <div class="slider_div">
