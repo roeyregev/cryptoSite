@@ -14,9 +14,10 @@
     }
 
     //Load homepage
-
     const coinsData = await getJson("coinsData.json");
     displayHomepage()
+    const acceptBtn = document.getElementById("acceptBtn");
+    const modalContainer = document.getElementById("modalContainer");
 
     //Search
     const searchInput = document.getElementById("searchInput");
@@ -117,8 +118,6 @@
         }
         html += `</section>`;
         pageContent.innerHTML = html;
-
-        // addToFavorites();
     };
 
     async function displayReportsPage() {
@@ -206,15 +205,16 @@
         })
     }
 
-
     //Favorites
     let favorites = [];
 
     const favoriteButtons = document.getElementsByClassName("favorite_icon");
-    console.log(favoriteButtons);
+    // console.log(favoriteButtons);
 
     for (const button of favoriteButtons) {
         button.addEventListener("click", function () {
+            
+
             if (!favorites.includes(this.id)) {
                 favorites.push(this.id);
                 console.log(favorites);
@@ -224,17 +224,106 @@
                 console.log(favorites);
             }
             favoriteOn();
+            displayModal();
+            updateModalFavorites()
         })
-
     }
 
     function favoriteOn() {
-        for (const button of favoriteButtons){
+        for (const button of favoriteButtons) {
             button.classList.remove("favorite-on")
         }
         for (const item of favorites) {
-            console.log("item: " + item );
+            // console.log("item: " + item);
             favoriteButtons[item].classList.toggle("favorite-on")
+        }
+    }
+
+
+    //display
+    function displayModal() {
+        isDisplayModal()
+        const coinsModalListContainer = document.getElementById("coinsModalListContainer");
+
+        let html = ``;
+        for (const item of favorites) {
+            html += `
+                     <div class="modal-list-item">
+        
+                         <div class="icon_and_symbol">
+                            <div class = "coin_icon"><img class = "coin_icon" src="${coinsData[item].image}" alt="${coinsData[item].id}"> </div>
+                            <div class="symbol_and_id">
+                                 <p class="coin_symbol"> ${coinsData[item].symbol}</p>
+                                <p class="coin_id"> ${coinsData[item].id}</p>
+                            </div>
+        
+                            <div class="favorite-icon-modal favorite-on" id="modalStar#${item}">${favoritesIcon}</div>
+                         </div>
+                     </div>
+                   `
+        }
+        coinsModalListContainer.innerHTML = html;
+
+    }
+
+    //modify favorites in modal
+    function updateModalFavorites() {
+
+
+        const modalStars = document.getElementsByClassName("favorite-icon-modal");
+        // console.log(modalStars);
+
+        for (const star of modalStars) {
+            star.addEventListener("click", function () {
+                let coinId = this.id.slice(10)
+                console.log(coinId);
+
+                if (!favorites.includes(coinId)) {
+
+                    favorites.push(coinId);
+                    console.log(favorites);
+                } else {
+                    const index = favorites.indexOf(coinId);
+                    favorites.splice(index, 1);
+                    console.log(favorites);
+                }
+                modalFavoriteOn(favorites, modalStars);
+
+            })
+        }
+
+    }
+
+    function modalFavoriteOn(favorites, modalStars) {
+
+        for (const button of modalStars) {
+            button.classList.remove("favorite-on")
+        }
+
+
+        for (const item of favorites) {
+            let starID = `modalStar#${item}`
+
+            for (const star of modalStars) {
+                if (star.id == starID) {
+                    star.classList.toggle("favorite-on");
+                }
+            }
+        }
+    }
+
+    acceptBtn.addEventListener("click", function () {
+        this.parentElement.parentElement.classList.add("hide");
+        favoriteOn()
+    })
+
+    function isDisplayModal() {
+        if (favorites.length > 5) {
+            favorites.splice(5,1);
+            favoriteOn();
+            modalContainer.classList.remove("hide");
+            
+           
         }
     }
 
@@ -247,104 +336,18 @@
 
 
 
+
+
+
+
 // "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
 
-   //updates the favorites array itself
-    // function updateFavoritesArray() {
-    //     favorites = [];
-    //     let selectedFavorites = document.getElementsByClassName("favorite-on");
-    //     for (const item of selectedFavorites) {
-    //         let index = item.id;
-    //         favorites.push(index);
-    //     }
-    //     console.log("updated favorites array: " + favorites);
-    //     return favorites;
-    // }
+// const coinsRatesArr = await getJson("https://api.coingecko.com/api/v3/coins/usd");
+ // const coinsRatesArr = await getJson("usd.json");
 
-
-
-    //toggle favorites buttons
-    // function addToFavorites() {
-    //     const favoriteIconsArray = document.getElementsByClassName("favorite_icon");
-    //     // console.log(favoriteIconsArray);
-    //     for (let i = 0; i < favoriteIconsArray.length; i++) {
-    //         favoriteIconsArray[i].addEventListener("click", function () {
-    //             favoriteIconsArray[i].classList.toggle("favorite-on");
-    //             console.log(i);
-    //             updateFavoritesArray()
-    //             displayInModal()
-    //         })
-    //     }
-
-    // }
-
-
-   // function loadChart() {
-
-    // }
-
-
-// <div class="slider_div">
+ // <div class="slider_div">
 //     <div class="icon_arrow left"></div>
 //     <div class="dot dot-on"></div>
 //     <div class="dot dot-off"></div>
 //     <div class="icon_arrow right"></div>
 // </div>
-
-
-
-   //take the favorites array and display it in the modal
-    // function displayInModal() {
-
-    //     const coinsModalListContainer = document.getElementById("coinsModalListContainer");
-
-    //     let html = ``;
-    //     for (const item of favorites) {
-    //         html += `
-    //                     <div class="modal-list-item">
-
-    //                             <div class="icon_and_symbol">
-    //                                 <div class = "coin_icon"><img class = "coin_icon" src="${coinsDataArr[item].image}" alt="${coinsDataArr[item].id}"> </div>
-    //                                 <div class="symbol_and_id">
-    //                                     <p class="coin_symbol"> ${coinsDataArr[item].symbol}</p>
-    //                                     <p class="coin_id"> ${coinsDataArr[item].id}</p>
-    //                                 </div>
-
-    //                             <div class="favorite-icon-modal favorite-on-modal" id="${item}">${favoritesIcon}</div>
-    //                         </div>
-    //                     </div>
-    //                     `
-    //     }
-    //     coinsModalListContainer.innerHTML = html;
-
-    // }
-
-    //toggle favorite icons in modal and removes the relevant item from the array
-    // function toggleIconsInModal() {
-    //     console.log("favorites before delete: " + favorites);
-
-    //     const modalFavoriteIconsArray = document.getElementsByClassName("favorite-icon-modal");
-
-    //     for (let i = 0; i < modalFavoriteIconsArray.length; i++) {
-
-    //         modalFavoriteIconsArray[i].addEventListener("click", function () {
-    //             //toggle class and icon
-    //             modalFavoriteIconsArray[i].classList.toggle("favorite-on-modal");
-
-    //             //remove from favorites array
-    //             const itemToDelete = this.id;
-    //             favorites.splice(favorites.indexOf(itemToDelete), 1);
-    //             console.log("item to delete: " + itemToDelete);
-    //             console.log("favorites after delete: " + favorites);
-
-    //         })
-
-
-    //     }
-
-
-    // };
-
-
-    // const coinsRatesArr = await getJson("https://api.coingecko.com/api/v3/coins/usd");
-    // const coinsRatesArr = await getJson("usd.json");

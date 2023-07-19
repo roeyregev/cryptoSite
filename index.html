@@ -5,22 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    
-    
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
-    
-    
+
+
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   
-    
+
+
     <script src="main.js" defer></script>
     <script src="icons.js" defer></script>
-   
+
     <title>Crapto - The crappy crypto site</title>
 </head>
 
@@ -45,17 +47,17 @@
 
     <footer></footer>
 
-    <div class="modal-container">
-        <div class="modal-bg"></div>
+    <div class="modalContainer hide" id="modalContainer">
+
         <div class="modal-popup">
             <span id="closeModalBtn">&times;</span>
-            <h2>OOPS! Too Many Favorites</h2>
-            <p>Please remove one of your favorites in order to add a different one. Yes, we only support a list of
-                five...</p>
-
-            <div id="coinsModalListContainer">
-            </div>
-
+                <h2>OOPS! Too Many Favorites</h2>
+                <p>Please remove at least one of your favorites in order to add a different one. Yes, we only support a list of
+                    five...</p>
+                <div id="coinsModalListContainer">
+                nothing to see here!
+                </div>
+            <div class="modal-bg"></div>
             <button id="acceptBtn">Accept & Close</button>
         </div>
     </div>
@@ -63,9 +65,3 @@
 </body>
 
 </html>
-
-
-<!-- <div id="heroImageDiv">Hero image</div>
-
-        <section id="currenciesContent">
-        </section> -->
