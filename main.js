@@ -70,6 +70,9 @@
     //------------------------------------------------------------------------
 
     async function displayHomepage() {
+        const currenciesLink = document.getElementById("currenciesLink");
+        currenciesLink.focus()
+
         const pageContent = document.getElementById("pageContent");
         let html = `<div id="heroImageDiv"></div>
                     <div id="HomepageTypo">
@@ -97,7 +100,7 @@
                         </div>
                        
                         <div class="favorite_icon" id="${i}">${favoritesIcon}</div>
-                      
+                        
                         <div class="extra_info_div">
                             <div class="switch-container hide-rates">
                                 <div class="market_content">
@@ -106,10 +109,11 @@
                                     <div>Circulating supply: ${(coinsData[i].circulating_supply / 1000000).toFixed(0)} M</div>
                                 </div>
                             </div>
-
+                            
                             <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>
-                      
+                            <div class="preloader hide"> Preloader</div>
                         </div>
+                        
                     </div>
                     `
             }
@@ -120,7 +124,18 @@
         pageContent.innerHTML = html;
     };
 
+    // function preloader() {
+    //     const preloaders = document.getElementsByClassName("preloader");
+    //     for (const item of preloaders) {
+    //         this.classList.remove("hide");
+    //         item.addEventListener("load", function () {
+    //             this.classList.add("hide");
+    //         })
+    //     }
+    // };
+
     async function displayReportsPage() {
+
         let html = `<canvas id="myChart"></canvas>`
         pageContent.innerHTML = html;
 
@@ -129,10 +144,15 @@
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['date1', 'date2', 'date3', 'date4', 'date4', 'date5', 'date6', 'date7', 'date8', 'date9', 'date10', 'date11', 'date12', 'date13', 'date14'],
+                labels: ["now", "+10s", "+20s", "+30s", "+40s", "+50s", "+60s", "+70s", "+80s", "+90s", "+100s", "+110s", "+120s"],
                 datasets: [{
-                    label: 'Rate',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'BTC to USD',
+                    data: [10, 20, 30, 20, 10, 20, 30, 20, 10, 20, 30, 20, 10, 20],
+                    borderWidth: 3
+                },
+                {
+                    label: 'ETR in USD',
+                    data: [5, 10, 2, 5, 5, 8, 7, 6, 5, 5, 2, 4, 6, 7],
                     borderWidth: 3
                 }]
             },
@@ -144,15 +164,65 @@
                 }
             }
         });
-
+        refreshChartData()
     }
+    // refreshChart(favorites);
+    async function refreshChartData() {
+
+        //build an array of values for each coin + time stamp
+
+        //convert favorites to symbols
+        //convert symbols to strings for API url
+        const favoritesSymbols = [];
+
+
+        favorites.forEach(value => {
+            favoritesSymbols.push(coinsData[value].symbol.toUpperCase());
+        });
+        const apiString = favoritesSymbols.join();
+        console.log(favoritesSymbols + " // " + apiString);
+
+
+        // let chartData = [
+
+        //                 ]
+
+
+
+        //inject in the API url
+        //call API with setInterval
+        const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
+        console.log(chartApiData);
+
+
+        // setInterval((favorites) => {
+        //     console.log(favorites);
+        //     getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SYMBOL},${SYMBOL}&tsyms=USD");
+
+        // }, 2000)
+
+
+        //push to array.
+        //if array is long enough > pop the last item
+
+        //try and catch!!
+    }
+
+
+
+
+
 
     async function displayAboutPage() {
         let html = `
                   <div class="about_typo"> 
                     <h1>About Crapto</h1>
-                    <p>a few word about the about page</p>
-                    <div>Image</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+                    eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <div></div>
                   </div>
                  `
         pageContent.innerHTML = html;
@@ -163,6 +233,7 @@
 
     for (const button of switchInfoButtons) {
         button.addEventListener("click", async function () {
+
             const cardId = this.parentElement.parentElement.id;
             this.parentElement.children[0].classList.toggle("hide-market");
             this.parentElement.children[0].classList.toggle("hide-rates");
@@ -213,7 +284,6 @@
 
     for (const button of favoriteButtons) {
         button.addEventListener("click", function () {
-            
 
             if (!favorites.includes(this.id)) {
                 favorites.push(this.id);
@@ -269,7 +339,6 @@
     //modify favorites in modal
     function updateModalFavorites() {
 
-
         const modalStars = document.getElementsByClassName("favorite-icon-modal");
         // console.log(modalStars);
 
@@ -288,7 +357,6 @@
                     console.log(favorites);
                 }
                 modalFavoriteOn(favorites, modalStars);
-
             })
         }
 
@@ -319,14 +387,17 @@
 
     function isDisplayModal() {
         if (favorites.length > 5) {
-            favorites.splice(5,1);
+            favorites.splice(5, 1);
             favoriteOn();
             modalContainer.classList.remove("hide");
-            
-           
+
+
         }
     }
 
+    //Reports
+    // getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD");
+    // getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SYMBOL},${SYMBOL}&tsyms=USD");
 
 
 

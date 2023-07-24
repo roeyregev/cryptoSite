@@ -9,7 +9,8 @@ body {
 }
 
 html {
-    background: radial-gradient(66.54% 66.54% at 50.00% 12.64%, #2D4C69 0%, #343434 100%);
+    /* background: radial-gradient(66.54% 66.54% at 50.00% 12.64%, #2D4C69 0%, #343434 100%); */
+    background: radial-gradient(66.54% 66.54% at 50.00% 12.64%, #161338 0%, #1B1929 100%);
 }
 
 
@@ -24,26 +25,82 @@ nav {
     align-items: center;
     box-sizing: border-box;
     height: 90px;
-    background: linear-gradient(180deg, #000 0%, #000 100%);
+    background: linear-gradient(180deg, #221031 0%, #0C1227 100%);
     padding: 30px;
     color: white;
+
 }
 
-nav>div>a {
+#navBarLinksDiv {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.nav-link {
+    position: relative;
+    box-sizing: border-box;
     color: white;
     text-decoration: none;
+    font-size: 22px;
+    font-weight: 100;
+    min-width: 115px;
+    text-align: center;
+    padding: 0 5px;
+    opacity: 0.7;
+}
+
+.nav-link:hover {
+    font-weight: 200;
+    transition: 0.1s;
+    opacity: 1;
+}
+
+.nav-link:focus {
+    color: #FF8EDF;
+    font-weight: 200;
+    opacity: 1;
+}
+
+
+.nav-link:hover::after {
+    content: "";
+    width: 0;
+    height: 3px;
+    background-color: #FF8EDF;
+    position: absolute;
+    top: 30px;
+    left: 0;
+}
+
+.nav-link:focus::after {
+    content: "";
+    width: 100%;
+    height: 3px;
+    background-color: #FF8EDF;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    transition: 0.2s;
+    transform-origin: center;
+}
+
+:focus-visible {
+    outline: -webkit-focus-ring-color auto 0px;
 }
 
 #logoDiv {
-    height: 60px;
-    width: 200px;
-    background-color: rgb(96, 96, 96);
+    height: 50px;
+    width: 224px;
+    background-image: url(Assets/images/crapto_logo.svg);
+    background-repeat: no-repeat;
     cursor: pointer;
 }
 
 #navBarLinksDiv {
     display: flex;
-    gap: 30px;
+    gap: 50px;
 }
 
 
@@ -54,37 +111,47 @@ nav>div>a {
     gap: 5px;
     align-items: center;
     padding: 10px;
-    color: rgb(139, 139, 139);
     height: 48px;
     box-sizing: border-box;
-    background-color: rgb(44, 44, 44);
-    border: solid 1px white;
-    border-radius: 40px;
+    border-radius: 2.5rem;
+    border: 2px solid #a657ca;
+    background: #302243;
 }
 
 .search-input-and-icon {
     display: flex;
     gap: 5px;
     align-items: center;
+    color: #6E588D;
 }
 
 #searchInput {
+    font-family: 'Roboto', sans-serif;
     background-color: transparent;
     box-shadow: none;
     font-size: 1.2rem;
     color: white;
     font-weight: 100;
-    width: 70%;
+    width: 100%;
+    border: none;
+}
+
+#searchInput::placeholder {
+    color: #6E588D;
 }
 
 .search_icon {
-    height: 15px;
-    width: 15px;
-    background-color: rgb(82, 82, 82);
+    height: 24px;
+    width: 24px;
+    background-image: url(Assets/icons/icon_search.svg);
 }
 
 #clearSearch {
+    display: none;
     cursor: pointer;
+    width: 16px;
+    height: 16px;
+    background-image: url(Assets/icons/icon_clear_search.svg);
 }
 
 /*=====  End of Nav Bar  ======*/
@@ -98,23 +165,30 @@ nav>div>a {
     z-index: -1;
     top: 0;
     width: 100%;
-    height: 800px;
-    background: linear-gradient(180deg, #964BB0 0%, #3B3993 85.42%);
+    height: 1000px;
     opacity: 0.5;
 }
 
 #HomepageTypo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: white;
     padding-left: 50px;
-    padding-bottom: 20px;
+    height: 400px;
+    padding-bottom: 200px;
 
 }
 
 h1 {
     font-family: 'Racing Sans One', cursive;
-    font-size: 60px;
+    font-size: 52px;
     line-height: 110%;
     margin-bottom: -10px;
+    letter-spacing: 0.1rem;
+    text-align: center;
+    color: white;
 }
 
 #HomepageTypo>p {
@@ -122,6 +196,7 @@ h1 {
     font-weight: 100;
     line-height: 150%;
     max-width: 800px;
+    text-align: center;
 }
 
 
@@ -142,7 +217,7 @@ h1 {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-    background-color: rgb(30, 30, 30);
+    background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgb(255, 255, 255);
     padding: 24px;
     position: relative;
@@ -193,10 +268,6 @@ h1 {
 .favorite-on,
 .favorite-on-modal {
     opacity: 1;
-
-    .single_coins_card {
-        background-color: aliceblue;
-    }
 }
 
 .single_coins_card:has(.favorite-on) {
@@ -205,17 +276,17 @@ h1 {
 
 }
 
-.market_content {
-    /* background-color: #2e3439; */
-    line-height: 150%;
+.switch-container {
+    padding-top: 6px;
+    padding-bottom: 16px;
+}
+
+.market_content,
+.rates_content {
+    line-height: 170%;
     min-width: 310px;
 }
 
-.rates_content {
-    /* background-color: #2e3439; */
-    line-height: 150%;
-    min-width: 310px;
-}
 
 .hide-market .market_content {
     display: none;
@@ -225,6 +296,12 @@ h1 {
     display: none;
 }
 
+.preloader {
+    background-color: yellow;
+    width: 100%;
+    height: 80px;
+    color: black;
+}
 
 /* Slider */
 
@@ -236,6 +313,11 @@ h1 {
     margin-top: 14px;
 } */
 
+.extra_info_div {
+    display: flex;
+    flex-direction: column;
+}
+
 .extra_info_div>button {
     width: 120px;
     height: 30px;
@@ -244,6 +326,7 @@ h1 {
     border: 1px solid white;
     color: rgb(255, 255, 255);
     border-radius: 8px;
+    align-self: center;
 }
 
 .dot {
@@ -378,6 +461,35 @@ canvas {
     color: black;
 }
 
+
+
+/*=============================================
+=            About page            =
+=============================================*/
+.about_typo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* height: 100vh; */
+}
+
+.about_typo>p {
+    font-size: 26px;
+    font-weight: 100;
+    line-height: 150%;
+    max-width: 800px;
+    text-align: center;
+    color: white;
+}
+
+.about_typo>div {
+    height: 300px;
+    width: 300px;
+    background-image: url(Assets/images/image_about.png);
+}
+
+
+/*=====  End of About page  ======*/
 
 
 

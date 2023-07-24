@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -15,11 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
-
-
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="main.js" defer></script>
     <script src="icons.js" defer></script>
 
@@ -28,18 +24,18 @@
 
 <body>
     <nav>
-        <div id="logoDiv">Logo</div>
+        <div id="logoDiv"></div>
         <div id="navBarLinksDiv">
-            <a href="javascript:void(0)" id="currenciesLink">Currencies</a>
-            <a href="javascript:void(0)" id="reportLink">Comparison Report</a>
-            <a href="javascript:void(0)" id="aboutLink">About</a>
+            <a href="javascript:void(0)" id="currenciesLink" class="nav-link" >Currencies </a>
+            <a href="javascript:void(0)" id="reportLink" class="nav-link">Reports </a>
+            <a href="javascript:void(0)" id="aboutLink" class="nav-link">About </a>
         </div>
         <div id="searchBoxDiv">
             <div class="search-input-and-icon">
                 <div class="search_icon"></div>
                 <input type="search" id="searchInput" placeholder="Search coins">
             </div>
-            <div id="clearSearch">&times;</div>
+            <div id="clearSearch"></div>
         </div>
     </nav>
 
