@@ -17,6 +17,7 @@
     const coinsData = await getJson("coinsData.json");
     displayHomepage()
     const acceptBtn = document.getElementById("acceptBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
     const modalContainer = document.getElementById("modalContainer");
 
     //Search
@@ -391,17 +392,23 @@
     }
 
     acceptBtn.addEventListener("click", function () {
+
+
+
         this.parentElement.parentElement.classList.add("hide");
         favoriteOn()
     })
+
+    closeModalBtn.addEventListener("click", function () {
+        this.parentElement.parentElement.classList.add("hide");
+    })
+
 
     function isDisplayModal() {
         if (favorites.length > 5) {
             favorites.splice(5, 1);
             favoriteOn();
             modalContainer.classList.remove("hide");
-
-
         }
     }
 

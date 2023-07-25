@@ -367,7 +367,7 @@ h1 {
     position: fixed;
     background-color: rgba(0, 0, 0, 0.7);
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     margin: 0;
     z-index: -1;
 }
@@ -378,13 +378,13 @@ h1 {
     align-items: center;
     position: relative;
     background: linear-gradient(180deg, #964BB0 0%, #3B3993 85.42%);
-
+    box-sizing: border-box;
     color: white;
-    margin: auto;
-    width: 50%;
+    width: 80%;
     max-width: 620px;
+    min-width: 290px;
     padding: 20px;
-    margin: 5% auto;
+    margin: 160px auto;
     border: 2px solid #ffb7ef;
     border-radius: 24px;
     box-shadow: 0px 10px 30px 10px rgba(255, 255, 255, 0.2);
@@ -408,6 +408,7 @@ h1 {
     line-height: 150%;
     text-align: center;
     margin-bottom: 0;
+    padding: 0px 20px;
 }
 
 #closeModalBtn {
@@ -416,19 +417,33 @@ h1 {
     top: 10px;
     height: 24px;
     width: 24px;
-    background-color: #6E588D;
+    background-image: url(Assets/icons/icon_close_modal.svg);
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+#closeModalBtn:hover {
+   opacity: 1;
 }
 
 #acceptBtn {
     padding: 10px 30px;
-    background-color: #F078A9;
+    background-color: #f94eff;
+    border: none;
     box-shadow: none;
-    /* color: #1e1d41; */
     color: #fff;
     font-size: 1.1rem;
     font-weight: 200;
     border-radius: 8px;
-    border: none;
+    transition: 0.2s;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#acceptBtn:hover{
+    box-shadow: 0px 0px 16px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f100f9;
+    transition: 0.2s;
 }
 
 #coinsModalListContainer {
@@ -444,10 +459,10 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: 1px solid grey; */
     padding: 6px;
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
 }
 
 
@@ -478,7 +493,7 @@ canvas {
     display: flex;
     gap: 20px;
     height: 100px;
-    background-color: rgb(125, 99, 99);
+    background-color: rgb(57, 35, 76);
 }
 
 /*=====  End of Reports page  ======*/
@@ -585,7 +600,6 @@ span {
         font-size: 2.25vh;
     }
 
-
     .nav-link {
         font-size: 1.25rem;
         padding: 0 12px;
@@ -598,6 +612,11 @@ span {
 
     #searchInput {
         font-size: 1.15rem;
+    }
+
+    .modal-popup>h2 {
+        font-size: 38px;
+
     }
 }
 
@@ -616,9 +635,33 @@ span {
         font-size: 2vh;
     }
 
+    .modal-popup {
+        padding: 10px;
+        max-height: 70vh;
+    }
+
+    #coinsModalListContainer {
+        margin: 20px 0;
+        overflow-y: scroll;
+    }
+
+
+
+    .modal-list-item .coin_icon {
+        height: 40px;
+        width: 40px;
+    }
+
+    .modal-list-item .coin_symbol {
+        font-size: 28px;
+    }
 }
 
 @media (max-width: 400px) {
+    .modal-list-item {
+        width: 100%;
+    }
+
     .nav-link {
         font-size: 1.1rem;
         padding: 0 3px;
