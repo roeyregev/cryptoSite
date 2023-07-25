@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="main.js" defer></script>
     <script src="icons.js" defer></script>
@@ -26,7 +26,7 @@
     <nav>
         <div id="logoDiv"></div>
         <div id="navBarLinksDiv">
-            <a href="javascript:void(0)" id="currenciesLink" class="nav-link" >Currencies </a>
+            <a href="javascript:void(0)" id="currenciesLink" class="nav-link">Currencies </a>
             <a href="javascript:void(0)" id="reportLink" class="nav-link">Reports </a>
             <a href="javascript:void(0)" id="aboutLink" class="nav-link">About </a>
         </div>
@@ -41,19 +41,26 @@
 
     <div id="pageContent">PAGE CONTENT </div>
 
-    <footer></footer>
+    <footer>
+        <span>	&#169</span>
+        <span>All rights belong to me</span>
+
+    </footer>
 
     <div class="modalContainer hide" id="modalContainer">
+        
+        <div class="modal-bg"></div>
 
         <div class="modal-popup">
             <span id="closeModalBtn">&times;</span>
-                <h2>OOPS! Too Many Favorites</h2>
-                <p>Please remove at least one of your favorites in order to add a different one. Yes, we only support a list of
-                    five...</p>
-                <div id="coinsModalListContainer">
+            <h2>OOPS! Too Many Favorites</h2>
+            <p>Please remove at least one of your favorites in order to add a different one. Yes, we only support a list
+                of
+                five...</p>
+            <div id="coinsModalListContainer">
                 nothing to see here!
-                </div>
-            <div class="modal-bg"></div>
+            </div>
+           
             <button id="acceptBtn">Accept & Close</button>
         </div>
     </div>

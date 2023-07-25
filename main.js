@@ -38,7 +38,6 @@
             const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) || coinsData[i].id.toLowerCase().includes(searchQuery);
             console.log(coinsData[i].name + ": " + isVisible);
             coinsCardsArray[index].classList.toggle("hide", !isVisible);
-
         }
     })
 
@@ -74,7 +73,10 @@
         currenciesLink.focus()
 
         const pageContent = document.getElementById("pageContent");
-        let html = `<div id="heroImageDiv"></div>
+        let html = `<div id="heroImageDiv">
+                        <div id="layer1"></div>
+                    </div>
+
                     <div id="HomepageTypo">
                         <h1>Welcome to Crapto! <br>the crappy crypto page</h1>
                         <p>Ever needed a very partial info about only some of the 
@@ -103,6 +105,11 @@
                         
                         <div class="extra_info_div">
                             <div class="switch-container hide-rates">
+                            <div class="preloader hide">
+                                    <div>Market cap rank: </div>
+                                    <div>Market cap:</div>
+                                    <div>Circulating supply} M</div>
+                            </div>
                                 <div class="market_content">
                                     <div>Market cap rank: ${coinsData[i].market_cap_rank}</div>
                                     <div>Market cap: ${(coinsData[i].market_cap / 1000000).toFixed(0)} M</div>
@@ -111,7 +118,7 @@
                             </div>
                             
                             <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>
-                            <div class="preloader hide"> Preloader</div>
+                           
                         </div>
                         
                     </div>
@@ -123,16 +130,6 @@
         html += `</section>`;
         pageContent.innerHTML = html;
     };
-
-    // function preloader() {
-    //     const preloaders = document.getElementsByClassName("preloader");
-    //     for (const item of preloaders) {
-    //         this.classList.remove("hide");
-    //         item.addEventListener("load", function () {
-    //             this.classList.add("hide");
-    //         })
-    //     }
-    // };
 
     async function displayReportsPage() {
 
@@ -166,6 +163,8 @@
         });
         refreshChartData()
     }
+
+    //-------------------------------------------------------------------------------
     // refreshChart(favorites);
     async function refreshChartData() {
 
@@ -207,23 +206,22 @@
 
         //try and catch!!
     }
-
-
-
-
-
+    //-------------------------------------------------------------------------------
 
     async function displayAboutPage() {
         let html = `
-                  <div class="about_typo"> 
-                    <h1>About Crapto</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <div></div>
-                  </div>
+                <div class="about-container">
+                        <div class="about_typo"> 
+                            <h1>About Crapto</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+                            eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+                            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            
+                        </div>
+                        <div id="aboutImage"></div>
+                </div>
                  `
         pageContent.innerHTML = html;
     }
@@ -237,6 +235,7 @@
             const cardId = this.parentElement.parentElement.id;
             this.parentElement.children[0].classList.toggle("hide-market");
             this.parentElement.children[0].classList.toggle("hide-rates");
+
             const index = cardId.slice(6)
 
             let extraInfo;
@@ -246,6 +245,11 @@
             if (loadedExtraInfo) {
                 extraInfo = JSON.parse(loadedExtraInfo)
             } else {
+
+                //preloader div
+                console.log(this.parentElement.children[0].children[0]);
+                this.parentElement.children[0].children[0].classList.remove("hide");
+
                 extraInfo = await getJson(`https://api.coingecko.com/api/v3/coins/${coinsData[index].id}`);
 
                 //save
@@ -260,6 +264,12 @@
 
             //inject html
             let html = `
+                            <div class="preloader hide">
+                                <div>line1 </div>
+                                <div>line2</div>
+                                <div>line3</div>
+                            </div>
+
                             <div class="market_content">
                                 <div>Market cap rank: ${coinsData[index].market_cap_rank}</div>
                                 <div>Market cap: ${(coinsData[index].market_cap / 1000000).toFixed(0)} M</div>
