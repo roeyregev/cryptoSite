@@ -12,6 +12,18 @@ html {
     background: radial-gradient(66.54% 66.54% at 50.00% 12.64%, #161338 0%, #1B1929 100%);
 }
 
+#pageLoader {
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    z-index: 1;
+}
+
 /*=============================================
 =            Nav Bar            =
 =============================================*/
@@ -202,6 +214,8 @@ h1 {
     line-height: 150%;
     max-width: 800px;
     text-align: center;
+    text-shadow: 1px 0px 4px rgba(50, 26, 74, 0.5);
+
 }
 
 
@@ -268,12 +282,14 @@ h1 {
     height: 32px;
     width: 32px;
     cursor: pointer;
-    opacity: 0.5;
+    background-image: url(Assets/icons/icon_favorites_off.png);
+    opacity: 0.8;
+
 }
 
 .favorite-on,
 .favorite-on-modal {
-    opacity: 1;
+    background-image: url(Assets/icons/icon_favorites_on.png);
 }
 
 .single_coins_card:has(.favorite-on) {
@@ -303,6 +319,8 @@ h1 {
 
 .preloader {
     background-color: yellow;
+    line-height: 170%;
+    min-width: 240px;
     color: black;
 }
 
@@ -322,6 +340,13 @@ h1 {
     color: rgb(255, 255, 255);
     border-radius: 8px;
     align-self: center;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.switch-info:hover {
+    box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.2);
+    transition: 0.1s;
 }
 
 /* .dot {
@@ -371,6 +396,7 @@ h1 {
     margin: 0;
     z-index: -1;
 }
+
 
 .modal-popup {
     display: flex;
@@ -423,7 +449,7 @@ h1 {
 }
 
 #closeModalBtn:hover {
-   opacity: 1;
+    opacity: 1;
 }
 
 #acceptBtn {
@@ -440,7 +466,7 @@ h1 {
     cursor: pointer;
 }
 
-#acceptBtn:hover{
+#acceptBtn:hover {
     box-shadow: 0px 0px 16px 4px rgba(0, 0, 0, 0.1);
     background-color: #f100f9;
     transition: 0.2s;

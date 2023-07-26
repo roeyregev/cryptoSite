@@ -2,6 +2,13 @@
 
 (async () => {
 
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+        if (sessionStorage.key(i).includes("info")) {
+            console.log(sessionStorage.key(i));
+            sessionStorage.removeItem(sessionStorage.key(i));
+        }
+    }
+
     async function getJson(url) {
         try {
             const response = await fetch(url);
@@ -9,13 +16,30 @@
             console.log(json);
             return json;
         } catch (error) {
-            console.log("Something went Wrong: " + error)
+            console.log("Something went Wrong; Couldn't get response " + error)
         }
     }
 
     //Load homepage
-    const coinsData = await getJson("coinsData.json");
+
+    let coinsData;
+    const pageLoader = document.getElementById("pageLoader");
+
+    const loadedCoinsData = sessionStorage.getItem("Coins data");
+    if (loadedCoinsData) {
+        coinsData = JSON.parse(loadedCoinsData)
+    } else {
+        pageLoader.style.display = "flex";
+        // coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
+        coinsData = await getJson("coinsData.json");
+        pageLoader.style.display = "none";
+        const storedCoinsData = JSON.stringify(coinsData);
+        sessionStorage.setItem("Coins data", storedCoinsData);
+    }
+
+
     displayHomepage()
+    moreInfo()
     const acceptBtn = document.getElementById("acceptBtn");
     const closeModalBtn = document.getElementById("closeModalBtn");
     const modalContainer = document.getElementById("modalContainer");
@@ -53,6 +77,7 @@
     })
     currenciesLink.addEventListener("click", () => {
         displayHomepage()
+        moreInfo()
     })
 
     reportLink.addEventListener("click", () => {
@@ -63,7 +88,6 @@
         displayAboutPage()
     })
 
-    // displayInModal()
 
     //------------------------------------------------------------------------
     //                                 FUNCTIONS
@@ -90,6 +114,24 @@
                     <section id="currenciesContent">
                     `;
 
+        function showContent(i) {
+            return ` <div class="market_content">
+                        <div>Market cap rank: ${coinsData[i].market_cap_rank}</div>
+                        <div>Market cap: ${(coinsData[i].market_cap / 1000000).toFixed(0)} M</div>
+                        <div>Circulating supply: ${(coinsData[i].circulating_supply / 1000000).toFixed(0)} M</div>
+                    </div>`
+        }
+
+        function showLoader() {
+            return `<div class="preloader hide">
+                        <div>XXXXXXXXXXX </div>
+                        <div>XXXXXXXXXXX</div>
+                        <div>XXXXXXXXXXX</div>
+                    </div>`
+        }
+
+
+
         if (coinsData && coinsData.length) {
             for (let i = 0; i < 50; i++) {
                 html += `
@@ -102,20 +144,14 @@
                             </div>
                         </div>
                        
-                        <div class="favorite_icon" id="${i}">${favoritesIcon}</div>
+                        <div class="favorite_icon" id="${i}"></div>
                         
                         <div class="extra_info_div">
                             <div class="switch-container hide-rates">
-                            <div class="preloader hide">
-                                    <div>Market cap rank: </div>
-                                    <div>Market cap:</div>
-                                    <div>Circulating supply} M</div>
-                            </div>
-                                <div class="market_content">
-                                    <div>Market cap rank: ${coinsData[i].market_cap_rank}</div>
-                                    <div>Market cap: ${(coinsData[i].market_cap / 1000000).toFixed(0)} M</div>
-                                    <div>Circulating supply: ${(coinsData[i].circulating_supply / 1000000).toFixed(0)} M</div>
-                                </div>
+
+                            ${showLoader()}
+                            ${showContent(i)}
+                            
                             </div>
                             
                             <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>
@@ -191,8 +227,8 @@
 
         //inject in the API url
         //call API with setInterval
-        const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
-        console.log(chartApiData);
+        // const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
+        // console.log(chartApiData);
 
 
         // setInterval((favorites) => {
@@ -208,6 +244,7 @@
         //try and catch!!
     }
     //-------------------------------------------------------------------------------
+
 
     async function displayAboutPage() {
         let html = `
@@ -228,43 +265,44 @@
     }
 
     //display more info in each card
-    const switchInfoButtons = document.getElementsByClassName("switch-info");
+    async function moreInfo() {
+        const switchInfoButtons = document.getElementsByClassName("switch-info");
 
-    for (const button of switchInfoButtons) {
-        button.addEventListener("click", async function () {
+        for (const button of switchInfoButtons) {
+            button.addEventListener("click", async function () {
 
-            const cardId = this.parentElement.parentElement.id;
-            this.parentElement.children[0].classList.toggle("hide-market");
-            this.parentElement.children[0].classList.toggle("hide-rates");
+                const cardId = this.parentElement.parentElement.id;
+                this.parentElement.children[0].classList.toggle("hide-market");
+                this.parentElement.children[0].classList.toggle("hide-rates");
 
-            const index = cardId.slice(6)
+                const index = cardId.slice(6)
 
-            let extraInfo;
+                let extraInfo;
 
-            //check for existing data:
-            const loadedExtraInfo = localStorage.getItem(`${coinsData[index].id} info`);
-            if (loadedExtraInfo) {
-                extraInfo = JSON.parse(loadedExtraInfo)
-            } else {
+                //check for existing data:
+                const loadedExtraInfo = sessionStorage.getItem(`${coinsData[index].id} info`);
+                if (loadedExtraInfo) {
+                    extraInfo = JSON.parse(loadedExtraInfo)
+                } else {
 
-                //preloader div
-                console.log(this.parentElement.children[0].children[0]);
-                this.parentElement.children[0].children[0].classList.remove("hide");
+                    // //preloader div
+                    console.log(this.parentElement.children[0].children[0]);
+                    this.parentElement.children[0].children[0].classList.remove("hide");
 
-                extraInfo = await getJson(`https://api.coingecko.com/api/v3/coins/${coinsData[index].id}`);
+                    extraInfo = await getJson(`https://api.coingecko.com/api/v3/coins/${coinsData[index].id}`);
 
-                //save
-                let extraInfoString = JSON.stringify(extraInfo);
-                localStorage.setItem(`${coinsData[index].id} info`, extraInfoString);
+                    //save
+                    let extraInfoString = JSON.stringify(extraInfo);
+                    sessionStorage.setItem(`${coinsData[index].id} info`, extraInfoString);
 
-                //remove from storage after 2 min
-                setTimeout(() => {
-                    localStorage.removeItem(`${coinsData[index].id} info`);
-                }, 120 * 1000);
-            }
+                    //remove from storage after 2 min
+                    setTimeout(() => {
+                        sessionStorage.removeItem(`${coinsData[index].id} info`);
+                    }, 120 * 1000);
+                }
 
-            //inject html
-            let html = `
+                //inject html
+                let html = `
                             <div class="preloader hide">
                                 <div>line1 </div>
                                 <div>line2</div>
@@ -283,17 +321,34 @@
                                 <div>ILS: ${extraInfo.market_data.current_price.ils}</div>
                             </div>
                         `;
-            this.parentElement.children[0].innerHTML = html
-        })
+                this.parentElement.children[0].innerHTML = html
+            })
+        }
     }
 
     //Favorites
+
+    function loadFavorites() {
+        let loadedFavorites = sessionStorage.getItem("saved favorites");
+        if (loadedFavorites) {
+            favorites = JSON.parse(loadedFavorites);
+            console.log("loaded favorites: " + favorites)
+        } else {
+            favorites = []
+        }
+    }
+
+    function saveFavorites() {
+        let savedFavorites = JSON.stringify(favorites);
+        sessionStorage.setItem("saved favorites", savedFavorites);
+    }
+
     let favorites = [];
 
     const favoriteButtons = document.getElementsByClassName("favorite_icon");
-    // console.log(favoriteButtons);
-
     for (const button of favoriteButtons) {
+        loadFavorites()
+        favoriteOn();
         button.addEventListener("click", function () {
 
             if (!favorites.includes(this.id)) {
@@ -304,6 +359,7 @@
                 favorites.splice(index, 1);
                 console.log(favorites);
             }
+            saveFavorites()
             favoriteOn();
             displayModal();
             updateModalFavorites()
@@ -315,13 +371,12 @@
             button.classList.remove("favorite-on")
         }
         for (const item of favorites) {
-            // console.log("item: " + item);
             favoriteButtons[item].classList.toggle("favorite-on")
         }
     }
 
 
-    //display
+    //display modal
     function displayModal() {
         isDisplayModal()
         const coinsModalListContainer = document.getElementById("coinsModalListContainer");
@@ -368,9 +423,9 @@
                     console.log(favorites);
                 }
                 modalFavoriteOn(favorites, modalStars);
+                saveFavorites();
             })
         }
-
     }
 
     function modalFavoriteOn(favorites, modalStars) {
@@ -392,9 +447,6 @@
     }
 
     acceptBtn.addEventListener("click", function () {
-
-
-
         this.parentElement.parentElement.classList.add("hide");
         favoriteOn()
     })
@@ -402,7 +454,6 @@
     closeModalBtn.addEventListener("click", function () {
         this.parentElement.parentElement.classList.add("hide");
     })
-
 
     function isDisplayModal() {
         if (favorites.length > 5) {
@@ -412,9 +463,8 @@
         }
     }
 
-    //Reports
-    // getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD");
-    // getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SYMBOL},${SYMBOL}&tsyms=USD");
+
+
 
 
 
@@ -432,10 +482,3 @@
 
 // const coinsRatesArr = await getJson("https://api.coingecko.com/api/v3/coins/usd");
  // const coinsRatesArr = await getJson("usd.json");
-
- // <div class="slider_div">
-//     <div class="icon_arrow left"></div>
-//     <div class="dot dot-on"></div>
-//     <div class="dot dot-off"></div>
-//     <div class="icon_arrow right"></div>
-// </div>
