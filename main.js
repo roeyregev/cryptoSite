@@ -21,7 +21,8 @@
     }
 
     //Load homepage
-
+    let chartInterval;
+    let favorites = [];
     let coinsData;
     const pageLoader = document.getElementById("pageLoader");
 
@@ -37,7 +38,6 @@
         sessionStorage.setItem("Coins data", storedCoinsData);
     }
 
-
     displayHomepage()
     moreInfo()
     const acceptBtn = document.getElementById("acceptBtn");
@@ -47,17 +47,14 @@
     //Search
     const searchInput = document.getElementById("searchInput");
     const clearSearch = document.getElementById("clearSearch");
-
     clearSearch.addEventListener("click", () => {
         searchInput.value = ``;
     })
 
     searchInput.addEventListener("input", () => {
-
         let searchQuery = searchInput.value.toLowerCase();
         console.log("Search query: " + searchQuery);
         let coinsCardsArray = document.getElementsByClassName("single_coins_card");
-
         for (let i = 0; i < coinsData.length; i++) {
             let index = i;
             const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) || coinsData[i].id.toLowerCase().includes(searchQuery);
@@ -75,9 +72,11 @@
     logoDiv.addEventListener("click", () => {
         displayHomepage()
     })
+
     currenciesLink.addEventListener("click", () => {
         displayHomepage()
         moreInfo()
+        favoriteOn()
     })
 
     reportLink.addEventListener("click", () => {
@@ -89,11 +88,9 @@
     })
 
 
-    //------------------------------------------------------------------------
-    //                                 FUNCTIONS
-    //------------------------------------------------------------------------
-
     async function displayHomepage() {
+        clearInterval(chartInterval);
+        console.log("favorites: " + favorites)
         const currenciesLink = document.getElementById("currenciesLink");
         currenciesLink.focus()
 
@@ -101,7 +98,6 @@
         let html = `<div id="heroImageDiv">
                         <div id="layer1"></div>
                     </div>
-
                     <div id="HomepageTypo">
                         <h1>Welcome to Crapto! <br>the crappy crypto page</h1>
                         <p>Ever needed a very partial info about only some of the 
@@ -109,10 +105,8 @@
                         chart? Ever looked for a place where you can't trade anything or be 
                         active in any way?
                         If you did, then Crapto is the place for you</p>
-                    </div>
-                    
-                    <section id="currenciesContent">
-                    `;
+                    </div>                    
+                    <section id="currenciesContent">`;
 
         function showContent(i) {
             return ` <div class="market_content">
@@ -123,14 +117,12 @@
         }
 
         function showLoader() {
-            return `<div class="preloader hide">
-                        <div>XXXXXXXXXXX </div>
-                        <div>XXXXXXXXXXX</div>
-                        <div>XXXXXXXXXXX</div>
+            return ` <div class="preloader hide">
+                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
                     </div>`
         }
-
-
 
         if (coinsData && coinsData.length) {
             for (let i = 0; i < 50; i++) {
@@ -142,25 +134,19 @@
                                 <p class="coin_symbol"> ${coinsData[i].symbol}</p>
                                 <p class="coin_id"> ${coinsData[i].id}</p>
                             </div>
-                        </div>
-                       
-                        <div class="favorite_icon" id="${i}"></div>
-                        
+                        </div>                      
+                        <div class="favorite_icon" id="${i}"></div>                       
                         <div class="extra_info_div">
                             <div class="switch-container hide-rates">
-
                             ${showLoader()}
-                            ${showContent(i)}
-                            
-                            </div>
-                            
-                            <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>
-                           
-                        </div>
-                        
+                            ${showContent(i)}                           
+                            </div>                           
+                            <button class="switch-info" id="moreInfo_${coinsData[i].id}">Switch info</button>                          
+                        </div>                       
                     </div>
                     `
             }
+
         } else {
             html += `<div>BUG!</div>`;
         }
@@ -170,83 +156,161 @@
 
     async function displayReportsPage() {
 
-        let html = `<canvas id="myChart"></canvas>`
+        let html = `<h1 id="reportTitle">Your favorites in USD rates </h1>
+                    <div id="chartContainer"><canvas id="myChart"></canvas></div>`
         pageContent.innerHTML = html;
 
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["now", "+10s", "+20s", "+30s", "+40s", "+50s", "+60s", "+70s", "+80s", "+90s", "+100s", "+110s", "+120s"],
-                datasets: [{
-                    label: 'BTC to USD',
-                    data: [10, 20, 30, 20, 10, 20, 30, 20, 10, 20, 30, 20, 10, 20],
-                    borderWidth: 3
-                },
-                {
-                    label: 'ETR in USD',
-                    data: [5, 10, 2, 5, 5, 8, 7, 6, 5, 5, 2, 4, 6, 7],
-                    borderWidth: 3
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-        refreshChartData()
+        refreshChartData();
     }
 
-    //-------------------------------------------------------------------------------
-    // refreshChart(favorites);
     async function refreshChartData() {
+        const chartContainer = document.getElementById("chartContainer");
 
-        //build an array of values for each coin + time stamp
+        //temp favorites:
+        favorites = [0, 1, 2, 8, 10];
 
-        //convert favorites to symbols
-        //convert symbols to strings for API url
-        const favoritesSymbols = [];
+        let chartData = [];
+        let timeStamps = [];
 
-
+        //inject string into API link
+        let chartSymbols = [];
         favorites.forEach(value => {
-            favoritesSymbols.push(coinsData[value].symbol.toUpperCase());
+            chartSymbols.push(coinsData[value].symbol.toUpperCase());
         });
-        const apiString = favoritesSymbols.join();
-        console.log(favoritesSymbols + " // " + apiString);
+
+        const apiString = chartSymbols.join();
+        const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
+
+        chartInterval = setInterval(() => {
+            let currentTime = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
+            console.log(currentTime)
 
 
-        // let chartData = [
+            if (chartData.length < 30) {
+                chartData.push(chartApiData);
+                // timeStamps.pop()
+                timeStamps.push(currentTime);
 
-        //                 ]
+            } else {
+                chartData.pop();
+                chartData.push(chartApiData);
+                timeStamps.pop()
+                timeStamps.push(currentTime);
+            }
+
+            //just checking...
+            console.log("chart BTC symbol: " + Object.keys(chartData[0])[0]);
+            console.log("chart BTC rate: " + chartData[0][Object.keys(chartData[0])[0]].USD)
+
+            //organizing the data:
+            let dataSet0 = [];
+            for (let i = 0; i < chartData.length; i++) {
+                dataSet0.push(chartData[i][Object.keys(chartData[i])[0]].USD);
+            }
+
+            let dataSet1 = [];
+            for (let i = 0; i < chartData.length; i++) {
+                dataSet1.push(chartData[i][Object.keys(chartData[i])[1]].USD);
+            }
+
+            let dataSet2 = [];
+            for (let i = 0; i < chartData.length; i++) {
+                dataSet2.push(chartData[i][Object.keys(chartData[i])[2]].USD);
+            }
+
+            let dataSet3 = [];
+            for (let i = 0; i < chartData.length; i++) {
+                dataSet3.push(chartData[i][Object.keys(chartData[i])[3]].USD);
+            }
+
+            let dataSet4 = [];
+            let label4 = ``;
+            if (chartData.length >= 5) {
+                for (let i = 0; i < chartData.length; i++) {
+                    dataSet4.push(chartData[i][Object.keys(chartData[i])[4]].USD);
+                    label4 = chartSymbols[4];
+                }
+
+            } else {
+                dataSet4 = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",];
+                label4 = "None";
+            }
+
+            //chart component:
+            chartContainer.innerHTML = html;
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeStamps,
+                    // labels: ["1 min ago", "", "", "", "", "", "", "", "", "", "", "", "", "", "30 sec ago", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Now"],
+                    datasets: [{
+                        label: chartSymbols[0],
+                        data: dataSet0,
+                        // data: [10, 20, 30, 20, 10, 20, 30, 20, 10, 20, 30, 20, 10, 100],
+                        borderWidth: 3
+                    },
+                    {
+                        // label: Object.keys(chartData[0])[1],
+                        label: chartSymbols[1],
+                        data: dataSet1,
+                        borderWidth: 3
+                    },
+                    {
+                        label: chartSymbols[2],
+                        data: dataSet2,
+                        borderWidth: 3
+                    },
+                    {
+                        label: chartSymbols[2],
+                        data: dataSet2,
+                        borderWidth: 3
+                    },
+                    {
+                        label: chartSymbols[4],
+                        data: dataSet4,
+                        borderWidth: 3
+                    },
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: {
+                                color: `rgba(255,255,255,0.05)`
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: `rgba(255,255,255,0.05)`
+                            }
+                        }
+                    },
+                    display: true,
+                    animations: false,
+                    layout: {
+                        padding: 4
+                    },
 
 
+                }
+            });
 
-        //inject in the API url
-        //call API with setInterval
-        // const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
-        // console.log(chartApiData);
+        }, 2000)
 
-
-        // setInterval((favorites) => {
-        //     console.log(favorites);
-        //     getJson("https://min-api.cryptocompare.com/data/pricemulti?fsyms=${SYMBOL},${SYMBOL}&tsyms=USD");
-
-        // }, 2000)
-
-
-        //push to array.
-        //if array is long enough > pop the last item
-
-        //try and catch!!
+        let html = `<canvas id="myChart"></canvas>`;
     }
-    //-------------------------------------------------------------------------------
 
+    // refreshChartData()
+    //-------------------------------------------------------------------------------
 
     async function displayAboutPage() {
+        clearInterval(chartInterval);
+
         let html = `
                 <div class="about-container">
                         <div class="about_typo"> 
@@ -257,6 +321,9 @@
                             nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
                             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                             
+                        </div>
+                        <div>
+                        <span>Contact us at</span> <a>contact@crapto.com</a>
                         </div>
                         <div id="aboutImage"></div>
                 </div>
@@ -284,11 +351,8 @@
                 if (loadedExtraInfo) {
                     extraInfo = JSON.parse(loadedExtraInfo)
                 } else {
-
                     // //preloader div
-                    console.log(this.parentElement.children[0].children[0]);
                     this.parentElement.children[0].children[0].classList.remove("hide");
-
                     extraInfo = await getJson(`https://api.coingecko.com/api/v3/coins/${coinsData[index].id}`);
 
                     //save
@@ -304,9 +368,9 @@
                 //inject html
                 let html = `
                             <div class="preloader hide">
-                                <div>line1 </div>
-                                <div>line2</div>
-                                <div>line3</div>
+                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
                             </div>
 
                             <div class="market_content">
@@ -327,12 +391,11 @@
     }
 
     //Favorites
-
     function loadFavorites() {
         let loadedFavorites = sessionStorage.getItem("saved favorites");
         if (loadedFavorites) {
             favorites = JSON.parse(loadedFavorites);
-            console.log("loaded favorites: " + favorites)
+            // console.log("loaded favorites: " + favorites)
         } else {
             favorites = []
         }
@@ -342,9 +405,7 @@
         let savedFavorites = JSON.stringify(favorites);
         sessionStorage.setItem("saved favorites", savedFavorites);
     }
-
-    let favorites = [];
-
+    
     const favoriteButtons = document.getElementsByClassName("favorite_icon");
     for (const button of favoriteButtons) {
         loadFavorites()
@@ -375,7 +436,6 @@
         }
     }
 
-
     //display modal
     function displayModal() {
         isDisplayModal()
@@ -384,29 +444,25 @@
         let html = ``;
         for (const item of favorites) {
             html += `
-                     <div class="modal-list-item">
-        
+                     <div class="modal-list-item">        
                          <div class="icon_and_symbol">
                             <div class = "coin_icon"><img class = "coin_icon" src="${coinsData[item].image}" alt="${coinsData[item].id}"> </div>
                             <div class="symbol_and_id">
                                  <p class="coin_symbol"> ${coinsData[item].symbol}</p>
                                 <p class="coin_id"> ${coinsData[item].id}</p>
-                            </div>
-        
+                            </div>        
                             <div class="favorite-icon-modal favorite-on" id="modalStar#${item}">${favoritesIcon}</div>
                          </div>
                      </div>
                    `
         }
         coinsModalListContainer.innerHTML = html;
-
     }
 
     //modify favorites in modal
     function updateModalFavorites() {
 
         const modalStars = document.getElementsByClassName("favorite-icon-modal");
-        // console.log(modalStars);
 
         for (const star of modalStars) {
             star.addEventListener("click", function () {
@@ -434,10 +490,8 @@
             button.classList.remove("favorite-on")
         }
 
-
         for (const item of favorites) {
             let starID = `modalStar#${item}`
-
             for (const star of modalStars) {
                 if (star.id == starID) {
                     star.classList.toggle("favorite-on");
@@ -448,7 +502,12 @@
 
     acceptBtn.addEventListener("click", function () {
         this.parentElement.parentElement.classList.add("hide");
-        favoriteOn()
+        if (favorites.length === 6) {
+            favorites.pop()
+        };
+        saveFavorites();
+        console.log(favorites);
+        favoriteOn();
     })
 
     closeModalBtn.addEventListener("click", function () {
@@ -463,22 +522,7 @@
         }
     }
 
-
-
-
-
-
 })();
 
 
-
-
-
-
-
-
-
 // "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
-
-// const coinsRatesArr = await getJson("https://api.coingecko.com/api/v3/coins/usd");
- // const coinsRatesArr = await getJson("usd.json");
