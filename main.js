@@ -20,7 +20,7 @@
         }
     }
 
-    //Load homepage
+    // homepage - first load
     let chartInterval;
     let favorites = [];
     let coinsData;
@@ -49,19 +49,26 @@
     const clearSearch = document.getElementById("clearSearch");
     clearSearch.addEventListener("click", () => {
         searchInput.value = ``;
+        searchQuery()
     })
 
     searchInput.addEventListener("input", () => {
+        searchQuery()
+    })
+
+    function searchQuery(){
         let searchQuery = searchInput.value.toLowerCase();
         console.log("Search query: " + searchQuery);
         let coinsCardsArray = document.getElementsByClassName("single_coins_card");
         for (let i = 0; i < coinsData.length; i++) {
             let index = i;
-            const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) || coinsData[i].id.toLowerCase().includes(searchQuery);
+            const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) 
+            || coinsData[i].id.toLowerCase().includes(searchQuery) 
+            || coinsData[i].symbol.toLowerCase().includes(searchQuery);
             console.log(coinsData[i].name + ": " + isVisible);
             coinsCardsArray[index].classList.toggle("hide", !isVisible);
         }
-    })
+    }
 
     //Navbar:
     const currenciesLink = document.getElementById("currenciesLink");
@@ -71,12 +78,14 @@
 
     logoDiv.addEventListener("click", () => {
         displayHomepage()
+        moreInfo()
     })
 
     currenciesLink.addEventListener("click", () => {
         displayHomepage()
         moreInfo()
-        favoriteOn()
+        loadFavorites()
+        saveFavorites()
     })
 
     reportLink.addEventListener("click", () => {
@@ -451,7 +460,7 @@
                                  <p class="coin_symbol"> ${coinsData[item].symbol}</p>
                                 <p class="coin_id"> ${coinsData[item].id}</p>
                             </div>        
-                            <div class="favorite-icon-modal favorite-on" id="modalStar#${item}">${favoritesIcon}</div>
+                            <div class="favorite-icon-modal favorite-on" id="modalStar#${item}"></div>
                          </div>
                      </div>
                    `
