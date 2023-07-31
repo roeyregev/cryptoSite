@@ -39,7 +39,12 @@
         </div>
     </nav>
 
-    <div class="hide" id="pageLoader"><h1>PRE-LOADER...</h1></div>
+    <div class="hide" id="pageLoader">
+        <div id="animationContainer">
+            <div id="spinnerAnimation"></div>
+        </div>
+        <h1 id="loadingText">loading...</h1>
+    </div>
     <div id="pageContent">
         <div id="tempDiv"></div>
     </div>
@@ -51,7 +56,7 @@
     </footer>
 
     <div class="modalContainer hide" id="modalContainer">
-        
+
         <div class="modal-bg"></div>
 
         <div class="modal-popup">
@@ -63,7 +68,7 @@
             <div id="coinsModalListContainer">
                 nothing to see here!
             </div>
-           
+
             <button id="acceptBtn">Accept & Close</button>
         </div>
     </div>

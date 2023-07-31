@@ -14,7 +14,8 @@ html {
 
 #pageLoader {
     position: fixed;
-    display: none;
+    /* display: flex; */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.7);
@@ -23,6 +24,68 @@ html {
     margin: 0;
     z-index: 1;
 }
+
+#animationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 200px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+}
+
+#spinnerAnimation {
+    position: relative;
+    /* border: 10px solid white; */
+    background: linear-gradient(0deg, rgba(176, 244, 254, 0.2) 0%, rgba(176, 244, 254, 0.8)  100%);
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+}
+
+#spinnerAnimation::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #1a111c;
+  }
+
+
+@keyframes spinner {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg)}
+}
+
+/* .loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(0deg, rgba(255, 61, 0, 0.2) 33%, #ff3d00 100%);
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  .loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #263238;
+  }
+
 
 /*=============================================
 =            Nav Bar            =
@@ -64,7 +127,7 @@ nav {
     padding: 0 30px;
     opacity: 0.7;
     /* flex-grow: 1; */
-   
+
 }
 
 .nav-link:hover {
@@ -86,11 +149,20 @@ nav {
     background-color: #FF8EDF;
     position: absolute;
     top: 30px;
-    left: 22px;
+    left: 16%;
+ 
+    
 }
 
 .nav-link:focus::after {
+    content: "";
     width: 70%;
+    height: 3px;
+    background-color: #FF8EDF;
+    position: absolute;
+    top: 30px;
+    left: 16%;
+
     transition: 0.2s;
 }
 
@@ -167,6 +239,7 @@ nav {
 /* Hero Image */
 
 #heroImageDiv {
+
     position: fixed;
     display: flex;
     align-items: center;
@@ -179,6 +252,7 @@ nav {
 }
 
 #layer1 {
+    background-position: center;
     background-image: url(Assets/images/image-hero-layer1.png);
     width: 100%;
     height: 100%;
@@ -232,8 +306,6 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     color: white;
-
-
 }
 
 .single_coins_card {
@@ -286,7 +358,6 @@ h1 {
     cursor: pointer;
     background-image: url(Assets/icons/icon_favorites_off.png);
     opacity: 0.8;
-
 }
 
 .favorite-on,
@@ -297,7 +368,6 @@ h1 {
 .single_coins_card:has(.favorite-on) {
     box-shadow: 0px 0px 40px 0px rgba(223, 249, 255, 0.10) inset;
     background: linear-gradient(136deg, #331d34 0%, #33274f 100%);
-
 }
 
 .switch-container {
@@ -309,6 +379,7 @@ h1 {
 .rates_content {
     line-height: 170%;
     min-width: 240px;
+    height: 82px;
 }
 
 .hide-market .market_content {
@@ -321,36 +392,38 @@ h1 {
 
 .preloader {
     /* display: flex; */
+    height: 82px;
     flex-direction: column;
     box-sizing: border-box;
     line-height: 170%;
     min-width: 240px;
     color: transparent;
     justify-content: space-between;
-    align-items: stretch;
-    background-color: pink;
     border-radius: 4px;
-     background-color: #ffffff;
-     opacity: 0.05;
-
+    opacity: 0.5;
 }
 
-/* .preloader > div {
-    
-    display: flex;
-    box-sizing: border-box;
-    padding: 4px 0px;
-}*/
-
-/* .preloader-line {
-     height: 80%; 
-    width: 100%;
-    background-color: #ffffff;
-    border-radius: 4px;
+.preloader-line-container {
     box-sizing: inherit;
-    opacity: 0.2;  
-} */
+    padding: 4px;
+}
 
+.preloader-line-container:last-child {
+    width: 70%;
+}
+
+.preloader-line {
+    height: 20px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
+    background-size: 200%;
+    border-radius: 4px;
+    animation: lines-preloader-animation 1s infinite alternate ;
+}
+
+@keyframes lines-preloader-animation {
+    0% {background-position: left;}
+    100% {background-position: right;}
+}
 
 
 /* More info section */
@@ -512,7 +585,7 @@ h1 {
 
 canvas {
     padding: 50px;
-    border: 2px solid rgb(83, 83, 83);   
+    border: 2px solid rgb(83, 83, 83);
     width: 100%;
     margin: 20px;
     border-radius: 30px;
@@ -535,9 +608,10 @@ canvas {
     background-color: rgb(57, 35, 76);
 }
 
-#reportTitle{
+#reportTitle {
     margin-top: 140px;
 }
+
 /*=====  End of Reports page  ======*/
 
 
@@ -574,6 +648,10 @@ canvas {
     max-width: 800px;
     text-align: center;
     color: white;
+}
+
+#emailLink {
+    color: #FF8EDF;
 }
 
 #aboutImage {

@@ -2,6 +2,7 @@
 
 (async () => {
 
+    //reset "more info" data in case of refresh
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
         if (sessionStorage.key(i).includes("info")) {
             console.log(sessionStorage.key(i));
@@ -20,11 +21,12 @@
         }
     }
 
-    // homepage - first load
+    // homepage - first load - global elements
     let chartInterval;
     let favorites = [];
     let coinsData;
     const pageLoader = document.getElementById("pageLoader");
+    const favoriteButtons = document.getElementsByClassName("favorite_icon");
 
     const loadedCoinsData = sessionStorage.getItem("Coins data");
     if (loadedCoinsData) {
@@ -38,8 +40,6 @@
         sessionStorage.setItem("Coins data", storedCoinsData);
     }
 
-    displayHomepage()
-    moreInfo()
     const acceptBtn = document.getElementById("acceptBtn");
     const closeModalBtn = document.getElementById("closeModalBtn");
     const modalContainer = document.getElementById("modalContainer");
@@ -56,17 +56,18 @@
         searchQuery()
     })
 
-    function searchQuery(){
+    function searchQuery() {
         let searchQuery = searchInput.value.toLowerCase();
         console.log("Search query: " + searchQuery);
         let coinsCardsArray = document.getElementsByClassName("single_coins_card");
-        for (let i = 0; i < coinsData.length; i++) {
-            let index = i;
-            const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery) 
-            || coinsData[i].id.toLowerCase().includes(searchQuery) 
-            || coinsData[i].symbol.toLowerCase().includes(searchQuery);
+        for (let i = 0; i < coinsCardsArray.length; i++) {
+            // let index = i;
+            const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery)
+                || coinsData[i].id.toLowerCase().includes(searchQuery)
+                || coinsData[i].symbol.toLowerCase().includes(searchQuery);
             console.log(coinsData[i].name + ": " + isVisible);
-            coinsCardsArray[index].classList.toggle("hide", !isVisible);
+            console.log("array: " + coinsCardsArray, i, coinsCardsArray[i], coinsData.length);
+            coinsCardsArray[i].classList.toggle("hide", !isVisible);
         }
     }
 
@@ -76,16 +77,14 @@
     const aboutLink = document.getElementById("aboutLink");
     const logoDiv = document.getElementById("logoDiv");
 
+    loadHomepage()
+
     logoDiv.addEventListener("click", () => {
-        displayHomepage()
-        moreInfo()
+        loadHomepage()
     })
 
     currenciesLink.addEventListener("click", () => {
-        displayHomepage()
-        moreInfo()
-        loadFavorites()
-        saveFavorites()
+        loadHomepage()   
     })
 
     reportLink.addEventListener("click", () => {
@@ -96,6 +95,13 @@
         displayAboutPage()
     })
 
+    function loadHomepage() {
+        displayHomepage()
+        setFavoritesButtons()
+        loadFavorites()
+        saveFavorites()
+        moreInfo()
+    }
 
     async function displayHomepage() {
         clearInterval(chartInterval);
@@ -127,9 +133,9 @@
 
         function showLoader() {
             return ` <div class="preloader hide">
-                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
-                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
-                        <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                        <div class= "preloader-line-container"><div class="preloader-line"></div> </div>
+                        <div class= "preloader-line-container"><div class="preloader-line"></div> </div>
+                        <div class= "preloader-line-container"><div class="preloader-line"></div> </div>
                     </div>`
         }
 
@@ -188,7 +194,9 @@
         });
 
         const apiString = chartSymbols.join();
+        pageLoader.style.display = "flex"
         const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
+        pageLoader.style.display = "none";
 
         chartInterval = setInterval(() => {
             let currentTime = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
@@ -314,9 +322,6 @@
         let html = `<canvas id="myChart"></canvas>`;
     }
 
-    // refreshChartData()
-    //-------------------------------------------------------------------------------
-
     async function displayAboutPage() {
         clearInterval(chartInterval);
 
@@ -332,7 +337,7 @@
                             
                         </div>
                         <div>
-                        <span>Contact us at</span> <a>contact@crapto.com</a>
+                        <span>Contact us at</span> <a id="emailLink" href = "mailto: contact@crapto.com">contact@crapto.com</a>
                         </div>
                         <div id="aboutImage"></div>
                 </div>
@@ -377,9 +382,9 @@
                 //inject html
                 let html = `
                             <div class="preloader hide">
-                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
-                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
-                                <div><div class="preloader-line">XXXXXXXXXXX</div> </div>
+                                <div class="preloader-line-container"><div class="preloader-line"></div> </div>
+                                <div class="preloader-line-container"><div class="preloader-line"></div> </div>
+                                <div class="preloader-line-container"><div class="preloader-line"></div> </div>
                             </div>
 
                             <div class="market_content">
@@ -414,26 +419,28 @@
         let savedFavorites = JSON.stringify(favorites);
         sessionStorage.setItem("saved favorites", savedFavorites);
     }
-    
-    const favoriteButtons = document.getElementsByClassName("favorite_icon");
-    for (const button of favoriteButtons) {
-        loadFavorites()
-        favoriteOn();
-        button.addEventListener("click", function () {
 
-            if (!favorites.includes(this.id)) {
-                favorites.push(this.id);
-                console.log(favorites);
-            } else {
-                const index = favorites.indexOf(this.id);
-                favorites.splice(index, 1);
-                console.log(favorites);
-            }
-            saveFavorites()
+    function setFavoritesButtons() {
+
+        for (const button of favoriteButtons) {
+            loadFavorites()
             favoriteOn();
-            displayModal();
-            updateModalFavorites()
-        })
+            button.addEventListener("click", function () {
+
+                if (!favorites.includes(this.id)) {
+                    favorites.push(this.id);
+                    console.log(favorites);
+                } else {
+                    const index = favorites.indexOf(this.id);
+                    favorites.splice(index, 1);
+                    console.log(favorites);
+                }
+                saveFavorites()
+                favoriteOn();
+                displayModal();
+                updateModalFavorites()
+            })
+        }
     }
 
     function favoriteOn() {
