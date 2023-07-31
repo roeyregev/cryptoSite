@@ -329,11 +329,13 @@
                 <div class="about-container">
                         <div class="about_typo"> 
                             <h1>About Crapto</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <p>Welcome to the most mediocre crypto coins site on the internet.
+                             We may not have the biggest selection or the most cutting-edge technology,
+                              but we do have one thing that no other site can offer: our honesty. 
+                              We know that we're not the best, but we're also not the worst. 
+                              And hey, at least we're not charging you an arm and a leg for our mediocre services. 
+                              So if you're looking for a crypto coins site that's not going to break the bank, 
+                              then you've come to the right place.</p>
                             
                         </div>
                         <div>
