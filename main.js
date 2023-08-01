@@ -17,7 +17,8 @@
             console.log(json);
             return json;
         } catch (error) {
-            console.log("Something went Wrong; Couldn't get response " + error)
+            console.log("Something went Wrong; Couldn't get response " + error);
+            alert("Couldn't load data. Try again later and pray it'll work.");
         }
     }
 
@@ -84,7 +85,7 @@
     })
 
     currenciesLink.addEventListener("click", () => {
-        loadHomepage()   
+        loadHomepage()
     })
 
     reportLink.addEventListener("click", () => {
@@ -172,18 +173,18 @@
     async function displayReportsPage() {
 
         let html = `<h1 id="reportTitle">Your favorites in USD rates </h1>
-                    <div id="chartContainer"><canvas id="myChart"></canvas></div>`
+                    <div id="reportsContentArea">
+                        <div id="chartContainer">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>`
         pageContent.innerHTML = html;
 
         refreshChartData();
     }
 
     async function refreshChartData() {
-        const chartContainer = document.getElementById("chartContainer");
-
-        //temp favorites:
-        favorites = [0, 1, 2, 8, 10];
-
+        const chartContainer = document.getElementById("chartContainer");      
         let chartData = [];
         let timeStamps = [];
 
@@ -192,7 +193,6 @@
         favorites.forEach(value => {
             chartSymbols.push(coinsData[value].symbol.toUpperCase());
         });
-
         const apiString = chartSymbols.join();
         pageLoader.style.display = "flex"
         const chartApiData = await getJson(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${apiString}&tsyms=USD`);
@@ -200,13 +200,11 @@
 
         chartInterval = setInterval(() => {
             let currentTime = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
-            console.log(currentTime)
-
 
             if (chartData.length < 30) {
                 chartData.push(chartApiData);
-                // timeStamps.pop()
                 timeStamps.push(currentTime);
+                // console.log("chart data: " + chartData);
 
             } else {
                 chartData.pop();
@@ -215,83 +213,30 @@
                 timeStamps.push(currentTime);
             }
 
-            //just checking...
-            console.log("chart BTC symbol: " + Object.keys(chartData[0])[0]);
-            console.log("chart BTC rate: " + chartData[0][Object.keys(chartData[0])[0]].USD)
+            let datasetsArray = [];
+            for (let i = 0; i < favorites.length; i++) {
+               
+                const dataSet = chartData.map(singleFetch => singleFetch[chartSymbols[i]].USD)
 
-            //organizing the data:
-            let dataSet0 = [];
-            for (let i = 0; i < chartData.length; i++) {
-                dataSet0.push(chartData[i][Object.keys(chartData[i])[0]].USD);
+                datasetsArray.push({
+                    label: chartSymbols[i],
+                    data:dataSet,
+                    borderWidth:3
+                })
             }
-
-            let dataSet1 = [];
-            for (let i = 0; i < chartData.length; i++) {
-                dataSet1.push(chartData[i][Object.keys(chartData[i])[1]].USD);
-            }
-
-            let dataSet2 = [];
-            for (let i = 0; i < chartData.length; i++) {
-                dataSet2.push(chartData[i][Object.keys(chartData[i])[2]].USD);
-            }
-
-            let dataSet3 = [];
-            for (let i = 0; i < chartData.length; i++) {
-                dataSet3.push(chartData[i][Object.keys(chartData[i])[3]].USD);
-            }
-
-            let dataSet4 = [];
-            let label4 = ``;
-            if (chartData.length >= 5) {
-                for (let i = 0; i < chartData.length; i++) {
-                    dataSet4.push(chartData[i][Object.keys(chartData[i])[4]].USD);
-                    label4 = chartSymbols[4];
-                }
-
-            } else {
-                dataSet4 = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",];
-                label4 = "None";
-            }
+            console.log(chartData);
+            console.log(datasetsArray);
 
             //chart component:
-            chartContainer.innerHTML = html;
+            chartContainer.innerHTML = `<canvas id="myChart"></canvas>`;
             const ctx = document.getElementById('myChart');
 
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: timeStamps,
-                    // labels: ["1 min ago", "", "", "", "", "", "", "", "", "", "", "", "", "", "30 sec ago", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Now"],
-                    datasets: [{
-                        label: chartSymbols[0],
-                        data: dataSet0,
-                        // data: [10, 20, 30, 20, 10, 20, 30, 20, 10, 20, 30, 20, 10, 100],
-                        borderWidth: 3
-                    },
-                    {
-                        // label: Object.keys(chartData[0])[1],
-                        label: chartSymbols[1],
-                        data: dataSet1,
-                        borderWidth: 3
-                    },
-                    {
-                        label: chartSymbols[2],
-                        data: dataSet2,
-                        borderWidth: 3
-                    },
-                    {
-                        label: chartSymbols[2],
-                        data: dataSet2,
-                        borderWidth: 3
-                    },
-                    {
-                        label: chartSymbols[4],
-                        data: dataSet4,
-                        borderWidth: 3
-                    },
-                    ]
+                    datasets: datasetsArray
                 },
-
                 options: {
                     responsive: true,
                     scales: {
@@ -312,14 +257,10 @@
                     layout: {
                         padding: 4
                     },
-
-
                 }
             });
 
         }, 2000)
-
-        let html = `<canvas id="myChart"></canvas>`;
     }
 
     async function displayAboutPage() {

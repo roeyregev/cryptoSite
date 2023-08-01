@@ -37,7 +37,7 @@ html {
 #spinnerAnimation {
     position: relative;
     /* border: 10px solid white; */
-    background: linear-gradient(0deg, rgba(176, 244, 254, 0.2) 0%, rgba(176, 244, 254, 0.8)  100%);
+    background: linear-gradient(0deg, rgba(176, 244, 254, 0.2) 0%, rgba(176, 244, 254, 0.8) 100%);
     width: 60%;
     height: 60%;
     border-radius: 50%;
@@ -45,7 +45,7 @@ html {
 }
 
 #spinnerAnimation::after {
-    content: '';  
+    content: '';
     box-sizing: border-box;
     position: absolute;
     left: 50%;
@@ -55,12 +55,17 @@ html {
     height: 66px;
     border-radius: 50%;
     background: #1a111c;
-  }
+}
 
 
 @keyframes spinner {
-    0% { transform: rotate(0deg) }
-    100% { transform: rotate(360deg)}
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
 }
 
 /* .loader {
@@ -150,8 +155,8 @@ nav {
     position: absolute;
     top: 30px;
     left: 16%;
- 
-    
+
+
 }
 
 .nav-link:focus::after {
@@ -417,12 +422,17 @@ h1 {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
     background-size: 200%;
     border-radius: 4px;
-    animation: lines-preloader-animation 1s infinite alternate ;
+    animation: lines-preloader-animation 1s infinite alternate;
 }
 
 @keyframes lines-preloader-animation {
-    0% {background-position: left;}
-    100% {background-position: right;}
+    0% {
+        background-position: left;
+    }
+
+    100% {
+        background-position: right;
+    }
 }
 
 
@@ -583,22 +593,30 @@ h1 {
 =            Reports page            =
 =============================================*/
 
-canvas {
-    padding: 50px;
-    border: 2px solid rgb(83, 83, 83);
-    width: 100%;
-    margin: 20px;
-    border-radius: 30px;
+#reportsContentArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 70vh;
+    /* border: 2px solid red; */
+    padding: 20px;
+    margin: 30px auto;
+    box-sizing: border-box;
 }
 
 #chartContainer {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    margin-bottom: 40px;
-    height: 70vh;
+    align-items: flex-start;
+    /* border: 2px solid yellow; */
+}
+
+canvas {
+    justify-self: center;
+    width: 1500px;
+    /* height: 1000px; */
+    box-sizing: border-box;
+    border: 2px solid rgb(83, 83, 83);
+    border-radius: 30px;
 }
 
 .favorites_list {
@@ -613,12 +631,6 @@ canvas {
 }
 
 /*=====  End of Reports page  ======*/
-
-
-.chart {
-    height: 800px;
-    color: black;
-}
 
 
 
