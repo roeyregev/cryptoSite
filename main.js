@@ -77,23 +77,28 @@
     const reportLink = document.getElementById("reportLink");
     const aboutLink = document.getElementById("aboutLink");
     const logoDiv = document.getElementById("logoDiv");
+    const searchBoxDiv = document.getElementById("searchBoxDiv");
 
     loadHomepage()
 
     logoDiv.addEventListener("click", () => {
         loadHomepage()
+        // searchBoxDiv.style.opacity = 1;
     })
 
     currenciesLink.addEventListener("click", () => {
         loadHomepage()
+        // searchBoxDiv.style.opacity = 1;
     })
 
     reportLink.addEventListener("click", () => {
         displayReportsPage()
+        // searchBoxDiv.style.opacity = 0;
     })
 
     aboutLink.addEventListener("click", () => {
         displayAboutPage()
+        // searchBoxDiv.style.opacity = 0;
     })
 
     function loadHomepage() {
@@ -184,7 +189,7 @@
     }
 
     async function refreshChartData() {
-        const chartContainer = document.getElementById("chartContainer");      
+        const chartContainer = document.getElementById("chartContainer");
         let chartData = [];
         let timeStamps = [];
 
@@ -215,13 +220,13 @@
 
             let datasetsArray = [];
             for (let i = 0; i < favorites.length; i++) {
-               
+
                 const dataSet = chartData.map(singleFetch => singleFetch[chartSymbols[i]].USD)
 
                 datasetsArray.push({
                     label: chartSymbols[i],
-                    data:dataSet,
-                    borderWidth:3
+                    data: dataSet,
+                    borderWidth: 3
                 })
             }
             console.log(chartData);
@@ -279,7 +284,7 @@
                               then you've come to the right place.</p>
                             
                         </div>
-                        <div>
+                        <div id="contactDiv">
                         <span>Contact us at</span> <a id="emailLink" href = "mailto: contact@crapto.com">contact@crapto.com</a>
                         </div>
                         <div id="aboutImage"></div>
