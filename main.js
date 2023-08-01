@@ -34,8 +34,8 @@
         coinsData = JSON.parse(loadedCoinsData)
     } else {
         pageLoader.style.display = "flex";
-        // coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
-        coinsData = await getJson("coinsData.json");
+        coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
+        // coinsData = await getJson("coinsData.json");
         pageLoader.style.display = "none";
         const storedCoinsData = JSON.stringify(coinsData);
         sessionStorage.setItem("Coins data", storedCoinsData);
@@ -83,25 +83,31 @@
 
     logoDiv.addEventListener("click", () => {
         loadHomepage()
-        // searchBoxDiv.style.opacity = 1;
+
     })
 
     currenciesLink.addEventListener("click", () => {
         loadHomepage()
-        // searchBoxDiv.style.opacity = 1;
+
     })
 
     reportLink.addEventListener("click", () => {
-        displayReportsPage()
-        // searchBoxDiv.style.opacity = 0;
+        if (favorites.length === 0) {
+            alert("Nothing to see there. First, you have to choose at least 1 coin in favorite")
+        } else {
+            displayReportsPage()
+        }
+
+
     })
 
     aboutLink.addEventListener("click", () => {
         displayAboutPage()
-        // searchBoxDiv.style.opacity = 0;
+
     })
 
     function loadHomepage() {
+        
         displayHomepage()
         setFavoritesButtons()
         loadFavorites()
