@@ -5,7 +5,6 @@
     //reset "more info" data in case of refresh
     for (let i = sessionStorage.length - 1; i >= 0; i--) {
         if (sessionStorage.key(i).includes("info")) {
-            console.log(sessionStorage.key(i));
             sessionStorage.removeItem(sessionStorage.key(i));
         }
     }
@@ -14,7 +13,6 @@
         try {
             const response = await fetch(url);
             const json = await response.json();
-            console.log(json);
             return json;
         } catch (error) {
             console.log("Something went Wrong; Couldn't get response " + error);
@@ -34,8 +32,8 @@
         coinsData = JSON.parse(loadedCoinsData)
     } else {
         pageLoader.style.display = "flex";
-        coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
-        // coinsData = await getJson("coinsData.json");
+        // coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
+        coinsData = await getJson("coinsData.json");
         pageLoader.style.display = "none";
         const storedCoinsData = JSON.stringify(coinsData);
         sessionStorage.setItem("Coins data", storedCoinsData);
@@ -59,15 +57,12 @@
 
     function searchQuery() {
         let searchQuery = searchInput.value.toLowerCase();
-        console.log("Search query: " + searchQuery);
         let coinsCardsArray = document.getElementsByClassName("single_coins_card");
         for (let i = 0; i < coinsCardsArray.length; i++) {
             // let index = i;
             const isVisible = coinsData[i].name.toLowerCase().includes(searchQuery)
                 || coinsData[i].id.toLowerCase().includes(searchQuery)
                 || coinsData[i].symbol.toLowerCase().includes(searchQuery);
-            console.log(coinsData[i].name + ": " + isVisible);
-            console.log("array: " + coinsCardsArray, i, coinsCardsArray[i], coinsData.length);
             coinsCardsArray[i].classList.toggle("hide", !isVisible);
         }
     }
@@ -77,37 +72,46 @@
     const reportLink = document.getElementById("reportLink");
     const aboutLink = document.getElementById("aboutLink");
     const logoDiv = document.getElementById("logoDiv");
-    const searchBoxDiv = document.getElementById("searchBoxDiv");
 
     loadHomepage()
 
     logoDiv.addEventListener("click", () => {
         loadHomepage()
-
+        currenciesLink.classList.add("pink-line");
+        reportLink.classList.remove("pink-line");
+        aboutLink.classList.remove("pink-line");
     })
 
     currenciesLink.addEventListener("click", () => {
         loadHomepage()
-
+        currenciesLink.classList.add("pink-line");
+        reportLink.classList.remove("pink-line");
+        aboutLink.classList.remove("pink-line");
     })
 
     reportLink.addEventListener("click", () => {
         if (favorites.length === 0) {
-            alert("Nothing to see there. First, you have to choose at least 1 coin in favorite")
+            displayReportsPage()
+            alert("Nothing to see there. First, you have to choose at least 1 coin in favorite");
+            currenciesLink.classList.remove("pink-line");
+            reportLink.classList.add("pink-line");
+            aboutLink.classList.remove("pink-line");
         } else {
             displayReportsPage()
+            currenciesLink.classList.remove("pink-line");
+            reportLink.classList.add("pink-line");
+            aboutLink.classList.remove("pink-line");
         }
-
-
     })
 
     aboutLink.addEventListener("click", () => {
         displayAboutPage()
-
+        currenciesLink.classList.remove("pink-line");
+        reportLink.classList.remove("pink-line");
+        aboutLink.classList.add("pink-line");
     })
 
     function loadHomepage() {
-        
         displayHomepage()
         setFavoritesButtons()
         loadFavorites()
@@ -117,7 +121,6 @@
 
     async function displayHomepage() {
         clearInterval(chartInterval);
-        console.log("favorites: " + favorites)
         const currenciesLink = document.getElementById("currenciesLink");
         currenciesLink.focus()
 
@@ -182,7 +185,6 @@
     };
 
     async function displayReportsPage() {
-
         let html = `<h1 id="reportTitle">Your favorites in USD rates </h1>
                     <div id="reportsContentArea">
                         <div id="chartContainer">
@@ -190,7 +192,6 @@
                         </div>
                     </div>`
         pageContent.innerHTML = html;
-
         refreshChartData();
     }
 
@@ -215,8 +216,6 @@
             if (chartData.length < 30) {
                 chartData.push(chartApiData);
                 timeStamps.push(currentTime);
-                // console.log("chart data: " + chartData);
-
             } else {
                 chartData.pop();
                 chartData.push(chartApiData);
@@ -235,8 +234,6 @@
                     borderWidth: 3
                 })
             }
-            console.log(chartData);
-            console.log(datasetsArray);
 
             //chart component:
             chartContainer.innerHTML = `<canvas id="myChart"></canvas>`;
@@ -287,11 +284,10 @@
                               We know that we're not the best, but we're also not the worst. 
                               And hey, at least we're not charging you an arm and a leg for our mediocre services. 
                               So if you're looking for a crypto coins site that's not going to break the bank, 
-                              then you've come to the right place.</p>
-                            
+                              then you've come to the right place.</p>                       
                         </div>
                         <div id="contactDiv">
-                        <span>Contact us at</span> <a id="emailLink" href = "mailto: contact@crapto.com">contact@crapto.com</a>
+                            <span>Contact us at</span> <a id="emailLink" href = "mailto: contact@crapto.com">contact@crapto.com</a>
                         </div>
                         <div id="aboutImage"></div>
                 </div>
@@ -311,7 +307,6 @@
                 this.parentElement.children[0].classList.toggle("hide-rates");
 
                 const index = cardId.slice(6)
-
                 let extraInfo;
 
                 //check for existing data:
@@ -363,7 +358,6 @@
         let loadedFavorites = sessionStorage.getItem("saved favorites");
         if (loadedFavorites) {
             favorites = JSON.parse(loadedFavorites);
-            // console.log("loaded favorites: " + favorites)
         } else {
             favorites = []
         }
@@ -383,11 +377,9 @@
 
                 if (!favorites.includes(this.id)) {
                     favorites.push(this.id);
-                    console.log(favorites);
                 } else {
                     const index = favorites.indexOf(this.id);
                     favorites.splice(index, 1);
-                    console.log(favorites);
                 }
                 saveFavorites()
                 favoriteOn();
@@ -437,16 +429,12 @@
         for (const star of modalStars) {
             star.addEventListener("click", function () {
                 let coinId = this.id.slice(10)
-                console.log(coinId);
 
                 if (!favorites.includes(coinId)) {
-
                     favorites.push(coinId);
-                    console.log(favorites);
                 } else {
                     const index = favorites.indexOf(coinId);
                     favorites.splice(index, 1);
-                    console.log(favorites);
                 }
                 modalFavoriteOn(favorites, modalStars);
                 saveFavorites();
@@ -476,7 +464,6 @@
             favorites.pop()
         };
         saveFavorites();
-        console.log(favorites);
         favoriteOn();
     })
 
@@ -493,6 +480,3 @@
     }
 
 })();
-
-
-// "https://api.coingecko.com/api/v3/coins/${coin id}" -> for "more info"
