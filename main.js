@@ -32,8 +32,8 @@
         coinsData = JSON.parse(loadedCoinsData)
     } else {
         pageLoader.style.display = "flex";
-        // coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
-        coinsData = await getJson("coinsData.json");
+        coinsData = await getJson("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1");
+        // coinsData = await getJson("coinsData.json");
         pageLoader.style.display = "none";
         const storedCoinsData = JSON.stringify(coinsData);
         sessionStorage.setItem("Coins data", storedCoinsData);
@@ -155,7 +155,7 @@
         }
 
         if (coinsData && coinsData.length) {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 100; i++) {
                 html += `
                     <div class="single_coins_card" id="cardId${i}">
                         <div class="icon_and_symbol">

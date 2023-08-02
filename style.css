@@ -320,6 +320,7 @@ h1 {
     line-height: 100%;
     margin: 0;
     font-weight: 100;
+    max-width: 180px;
 }
 
 .coin_icon {
